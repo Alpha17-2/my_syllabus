@@ -20,7 +20,7 @@ class _mySyllabusState extends State<mySyllabus> {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
 
     // Adding a subject
-    Future<String> AddNdewSubject(BuildContext context) async {
+    void AddNdewSubject(BuildContext context) async {
       TextEditingController mycontroller = TextEditingController();
       return showDialog(
         barrierDismissible: false,
@@ -41,7 +41,14 @@ class _mySyllabusState extends State<mySyllabus> {
             actions: [
               MaterialButton(
                 onPressed: () {
-                  Navigator.of(context).pop(mycontroller.text.toString());
+                  FirebaseFirestore.instance
+                      .collection(currentUser.uid.toString())
+                      .doc(mycontroller.text.toString())
+                      .set({
+                    "title": mycontroller.text.toString(),
+                    "important": false
+                  });
+                  Navigator.of(context).pop();
                 },
                 child: Text("Submit"),
               )
@@ -52,6 +59,7 @@ class _mySyllabusState extends State<mySyllabus> {
     }
 
     Widget displayData(BuildContext context, DocumentSnapshot doc) {
+      bool isImportant = doc['important'];
       return GestureDetector(
         onTap: () {
           Navigator.push(
@@ -142,15 +150,35 @@ class _mySyllabusState extends State<mySyllabus> {
                     ),
                   ),
 
-                  // Mark favourite
+                  // Mark important
 
                   Positioned(
                     top: displayHeight(context) * 0.0115,
                     right: displayWidth(context) * 0.02,
                     child: IconButton(
-                      icon: Icon(Icons.star_border),
+                      icon: Icon(
+                        isImportant ? Icons.star : Icons.star_border,
+                        color: Colors.yellow,
+                      ),
                       onPressed: () {
                         // To-do implementation
+                        if (isImportant) {
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc(doc['title'])
+                              .update({"important": false});
+                          setState(() {
+                            isImportant = false;
+                          });
+                        }
+                        else
+                        {
+                          FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc(doc['title'])
+                            .update({"important": true});
+                        }
+                        
                       },
                     ),
                   ),
@@ -201,7 +229,7 @@ class _mySyllabusState extends State<mySyllabus> {
                 children: [
                   // Profile Picture
                   Positioned(
-                    top: displayHeight(context) * 0.04,
+                    top: displayHeight(context) * 0.064,
                     left: displayWidth(context) * 0.08,
                     child: Card(
                         color: Colors.blue[100],
@@ -215,7 +243,7 @@ class _mySyllabusState extends State<mySyllabus> {
                   // Profile Name
 
                   Positioned(
-                    top: displayHeight(context) * 0.058,
+                    top: displayHeight(context) * 0.082,
                     left: displayWidth(context) * 0.25,
                     child: Text(
                       currentUser.displayName,
@@ -239,7 +267,7 @@ class _mySyllabusState extends State<mySyllabus> {
                         signout(authNotifier);
                       },
                     ),
-                    top: displayHeight(context) * 0.04,
+                    top: displayHeight(context) * 0.064,
                     right: displayWidth(context) * 0.02,
                   ),
 
@@ -373,18 +401,7 @@ class _mySyllabusState extends State<mySyllabus> {
         child: Icon(Icons.add),
         onPressed: () {
           // to do
-          String title = "Maths";
-          FirebaseFirestore.instance
-              .collection(currentUser.uid.toString())
-              .doc(title)
-              .set({"title": title});
-
-
-          FirebaseFirestore.instance
-              .collection(currentUser.uid.toString())
-              .doc(title)
-              .collection("mylist")
-              .doc();
+          AddNdewSubject(context);
         },
       ),
     );

@@ -130,6 +130,47 @@ class subtopic extends StatelessWidget {
       );
     }
 
+    void AddNdewSubject(BuildContext context) async {
+      TextEditingController mycontroller = TextEditingController();
+      return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Add new subject !",
+              style: TextStyle(
+                fontSize: displayWidth(context) * 0.05,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            content: TextField(
+              controller: mycontroller,
+            ),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  FirebaseFirestore.instance
+                      .collection(currentUser.uid.toString())
+                      .doc(topic)
+                      .collection(topic)
+                      .doc(mycontroller.text.toString())
+                      .set({
+                    "title": mycontroller.text.toString(),
+                    "important": false,
+                    "complete": false
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text("Submit"),
+              )
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
@@ -307,13 +348,7 @@ class subtopic extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () {
           // to do
-          String subtopicName = "PnC";
-          FirebaseFirestore.instance
-              .collection(currentUser.uid.toString())
-              .doc(topic)
-              .collection(topic)
-              .doc(subtopicName)
-              .set({"title": subtopicName});
+          AddNdewSubject(context);
         },
       ),
     );
