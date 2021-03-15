@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1092200740767",
+    "project_id": "syllabus-6c4c8",
+    "storage_bucket": "syllabus-6c4c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092200740767:android:7f3c981bf3e6251bf76faa",
+        "android_client_info": {
+          "package_name": "com.Alpha.Syllabus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092200740767-puleh8mh96lh766psiabh84gaovh3jkp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyb8wmeXbbbqm7K29KHg4u96wc4tyEJ2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092200740767-puleh8mh96lh766psiabh84gaovh3jkp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
