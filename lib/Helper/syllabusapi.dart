@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'auth_notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,7 +19,7 @@ login(String email, String password, AuthNotifier authNotifier) async {
   }
 }
 
-signup(String email, String password, AuthNotifier authNotifier,
+Future<int> signup(String email, String password, AuthNotifier authNotifier,
     String displayName) async {
   UserCredential authResult = await FirebaseAuth.instance
       .createUserWithEmailAndPassword(email: email, password: password)
@@ -59,4 +61,11 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
   }
 }
 
-
+Future<int> getTotalTopics() {
+  User currentUser = FirebaseAuth.instance.currentUser;
+  return FirebaseFirestore.instance
+      .collection(currentUser.uid.toString())
+      .doc()
+      .snapshots()
+      .length;
+}

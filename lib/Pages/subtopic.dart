@@ -138,7 +138,7 @@ class subtopic extends StatelessWidget {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              "Add new subject !",
+              "Add new subtopic !",
               style: TextStyle(
                 fontSize: displayWidth(context) * 0.05,
                 color: Colors.black,

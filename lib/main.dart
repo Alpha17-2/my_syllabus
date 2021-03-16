@@ -17,8 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-         
+        providers: [         
           ChangeNotifierProvider(
             create: (context) => AuthNotifier(),
           ),
