@@ -4,7 +4,6 @@ import 'package:Syllabus/Helper/syllabusapi.dart';
 import 'package:Syllabus/Pages/subtopic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +15,13 @@ class mySyllabus extends StatefulWidget {
 class _mySyllabusState extends State<mySyllabus> {
   @override
   @override
+  int category = 0;
   Widget build(BuildContext context) {
     User currentUser = FirebaseAuth.instance.currentUser;
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
 
-    int tt = 0, tc = 0;
+    
+    final listOfCategory = ["All", "Important"];
 
     // Adding a subject
     void AddNdewSubject(BuildContext context) async {
@@ -63,7 +64,6 @@ class _mySyllabusState extends State<mySyllabus> {
       );
     }
 
-   
     Widget displayData(BuildContext context, DocumentSnapshot doc) {
       bool isImportant = doc['important'];
       return GestureDetector(
@@ -114,7 +114,6 @@ class _mySyllabusState extends State<mySyllabus> {
                     ),
                   ),
 
-                
                   // Mark important
 
                   Positioned(
@@ -169,8 +168,6 @@ class _mySyllabusState extends State<mySyllabus> {
         ),
       );
     }
-
-  
 
     return Scaffold(
         body: Stack(
@@ -235,26 +232,59 @@ class _mySyllabusState extends State<mySyllabus> {
                       right: displayWidth(context) * 0.02,
                     ),
 
-              // Display List options
+                    // Chosing Category
 
-                    Positioned(top: displayHeight(context)*0.16,
-                    left: displayWidth(context)*0.04,
-                    right: displayWidth(context)*0.04,
-                      child: Container(
-                        height: displayHeight(context)*0.075,
-                        width: displayWidth(context)*0.64,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                         borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ), 
-                        ),
-                      )
-                      )  
-
+                    Positioned(
+                        top: displayHeight(context) * 0.16,
+                        left: displayWidth(context) * 0.04,
+                        right: displayWidth(context) * 0.04,
+                        child: Container(
+                          child: ListView.builder(
+                            itemBuilder: (BuildContext context, int current) {
+                              return GestureDetector(
+                                onTap: () {
+                                  print("tap");
+                                  setState(() {
+                                    category = current;
+                                  });
+                                  print(category);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 18.0,
+                                      bottom: 10.0,
+                                      left: 75.0,
+                                      right: 50.0),
+                                  child: Text(
+                                    listOfCategory[current],
+                                    style: TextStyle(
+                                      color: (current == category)
+                                          ? Colors.black
+                                          : Colors.black45,
+                                      fontSize: displayWidth(context) * 0.045,
+                                      fontWeight: (current == category)
+                                          ? FontWeight.bold
+                                          : FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: listOfCategory.length,
+                            scrollDirection: Axis.horizontal,
+                          ),
+                          height: displayHeight(context) * 0.075,
+                          width: displayWidth(context) * 0.64,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30),
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                          ),
+                        ))
                   ],
                 ),
                 decoration: BoxDecoration(
@@ -269,13 +299,15 @@ class _mySyllabusState extends State<mySyllabus> {
                 ),
               ),
             ),
+
+            // 
             Positioned(
               top: displayHeight(context) * 0.26,
               child: Container(
                   alignment: Alignment.center,
                   height: displayHeight(context) * 0.74,
                   width: displayWidth(context) * 0.85,
-                  //rcolor: Colors.purple,
+                  //color: Colors.purple,
                   child: StreamBuilder(
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -328,7 +360,6 @@ class _mySyllabusState extends State<mySyllabus> {
             onPressed: () {
               // to do
 
-            
               AddNdewSubject(context);
             }));
   }
