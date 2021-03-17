@@ -89,7 +89,7 @@ class subtopic extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      // To-do implementation
+                     
                       FirebaseFirestore.instance
                           .collection(currentUser.uid.toString())
                           .doc("All")
