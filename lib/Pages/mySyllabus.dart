@@ -20,52 +20,11 @@ class _mySyllabusState extends State<mySyllabus> {
     User currentUser = FirebaseAuth.instance.currentUser;
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
 
-    
     final listOfCategory = ["All", "Important"];
 
-    // Adding a subject
-    void AddNdewSubject(BuildContext context) async {
-      TextEditingController mycontroller = TextEditingController();
-      return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              "Add new subject !",
-              style: TextStyle(
-                fontSize: displayWidth(context) * 0.05,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            content: TextField(
-              controller: mycontroller,
-            ),
-            actions: [
-              MaterialButton(
-                onPressed: () {
-                  int newValue;
-                  FirebaseFirestore.instance
-                      .collection(currentUser.uid.toString())
-                      .doc(mycontroller.text.toString())
-                      .set({
-                    "title": mycontroller.text.toString(),
-                    "important": false
-                  });
+    // Displaying all data
 
-                  Navigator.of(context).pop();
-                },
-                child: Text("Submit"),
-              )
-            ],
-          );
-        },
-      );
-    }
-
-    Widget displayData(BuildContext context, DocumentSnapshot doc) {
-      bool isImportant = doc['important'];
+    Widget displayAllData(BuildContext context, DocumentSnapshot doc) {
       return GestureDetector(
         onTap: () {
           Navigator.push(
@@ -91,14 +50,20 @@ class _mySyllabusState extends State<mySyllabus> {
                 children: [
                   Positioned(
                     left: displayWidth(context) * 0.02,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.lightBlue[100],
-                      radius: displayWidth(context) * 0.135,
-                      child: Image(
-                        image: AssetImage("images/a6.png"),
-                        width: displayWidth(context) * 0.18,
-                        height: displayHeight(context) * 0.1,
-                        fit: BoxFit.fill,
+                    child:Card(
+                      elevation: 10.5,
+                      color: Colors.blue[100],
+                      child: Container(
+                        height: displayHeight(context)*0.14,
+                        width: displayWidth(context)*0.25,
+                        child: Center(
+                          child: Image(
+                            image: AssetImage("images/a6.png"),
+                            width: displayWidth(context) * 0.22,
+                            height: displayHeight(context) * 0.12,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -121,22 +86,35 @@ class _mySyllabusState extends State<mySyllabus> {
                     right: displayWidth(context) * 0.02,
                     child: IconButton(
                       icon: Icon(
-                        isImportant ? Icons.star : Icons.star_border,
-                        color: Colors.yellow,
+                        doc['important'] ? Icons.star : Icons.star_border,
+                        color: Colors.purple,
                       ),
                       onPressed: () {
                         // To-do implementation
-                        if (isImportant) {
+                        if (doc['important']) {
                           FirebaseFirestore.instance
                               .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
                               .doc(doc['title'])
                               .update({"important": false});
-                          setState(() {
-                            isImportant = false;
-                          });
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("Important")
+                              .collection("list")
+                              .doc(doc['title'])
+                              .delete();
                         } else {
                           FirebaseFirestore.instance
                               .collection(currentUser.uid.toString())
+                              .doc("Important")
+                              .collection("list")
+                              .doc(doc['title'])
+                              .set({"title": doc['title'], "important": true});
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
                               .doc(doc['title'])
                               .update({"important": true});
                         }
@@ -155,6 +133,8 @@ class _mySyllabusState extends State<mySyllabus> {
                         // To-do implementation
                         FirebaseFirestore.instance
                             .collection(currentUser.uid.toString())
+                            .doc("All")
+                            .collection("list")
                             .doc(doc['title'])
                             .delete();
                       },
@@ -167,6 +147,119 @@ class _mySyllabusState extends State<mySyllabus> {
           ),
         ),
       );
+    }
+
+    Widget displayImportatntData(BuildContext context, DocumentSnapshot doc) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => subtopic(
+                        topic: doc['title'],
+                      )));
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            elevation: 15.0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                    left: displayWidth(context) * 0.02,
+                    child:Card(
+                      elevation: 10.5,
+                      color: Colors.blue[100],
+                      child: Container(
+                        height: displayHeight(context)*0.14,
+                        width: displayWidth(context)*0.25,
+                        child: Center(
+                          child: Image(
+                            image: AssetImage("images/a6.png"),
+                            width: displayWidth(context) * 0.22,
+                            height: displayHeight(context) * 0.12,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: displayHeight(context) * 0.08,
+                    left: displayWidth(context) * 0.37,
+                    child: Text(
+                      doc['title'],
+                      style: TextStyle(
+                        fontSize: displayWidth(context) * 0.055,
+                        fontFamily: "PatuaOne",
+                      ),
+                    ),
+                  ),
+
+                
+                ],
+              ),
+              height: displayHeight(context) * 0.2,
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget displayAllSyllabus() {
+      return StreamBuilder(
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData)
+              return Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.wifi_off_outlined,
+                        size: displayWidth(context) * 0.15,
+                      ),
+                      Opacity(
+                        opacity: 0.0,
+                        child: Divider(
+                          height: displayHeight(context) * 0.005,
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "Please check your internet connection ...",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            //fontWeight: FontWeight.bold,
+                            fontSize: displayWidth(context) * 0.055,
+                            fontFamily: "PatuaOne",
+                          ),
+                        ),
+                      ),
+                    ]),
+              );
+            return ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return (category == 0)
+                    ? displayAllData(context, snapshot.data.docs[index])
+                    : displayImportatntData(context, snapshot.data.docs[index]);
+              },
+              itemCount: snapshot.data.docs.length,
+            );
+          },
+          stream: FirebaseFirestore.instance
+              .collection(currentUser.uid.toString())
+              .doc(listOfCategory[category])
+              .collection("list")
+              .snapshots());
     }
 
     return Scaffold(
@@ -300,58 +393,17 @@ class _mySyllabusState extends State<mySyllabus> {
               ),
             ),
 
-            // 
+            //
             Positioned(
               top: displayHeight(context) * 0.26,
               child: Container(
-                  alignment: Alignment.center,
-                  height: displayHeight(context) * 0.74,
-                  width: displayWidth(context) * 0.85,
-                  //color: Colors.purple,
-                  child: StreamBuilder(
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData)
-                          return Center(
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.wifi_off_outlined,
-                                    size: displayWidth(context) * 0.15,
-                                  ),
-                                  Opacity(
-                                    opacity: 0.0,
-                                    child: Divider(
-                                      height: displayHeight(context) * 0.005,
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      "Please check your internet connection ...",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        //fontWeight: FontWeight.bold,
-                                        fontSize: displayWidth(context) * 0.055,
-                                        fontFamily: "PatuaOne",
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                          );
-                        return ListView.builder(
-                          itemBuilder: (BuildContext context, int index) {
-                            return displayData(
-                                context, snapshot.data.docs[index]);
-                          },
-                          itemCount: snapshot.data.docs.length,
-                        );
-                      },
-                      stream: FirebaseFirestore.instance
-                          .collection(currentUser.uid.toString())
-                          .snapshots())),
-            )
+                alignment: Alignment.center,
+                height: displayHeight(context) * 0.74,
+                width: displayWidth(context) * 0.85,
+                //color: Colors.purple,
+                child: displayAllSyllabus(),
+              ),
+            ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
