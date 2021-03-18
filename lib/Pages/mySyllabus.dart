@@ -137,6 +137,13 @@ class _mySyllabusState extends State<mySyllabus> {
                             .collection("list")
                             .doc(doc['title'])
                             .delete();
+                        FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc("Important")
+                            .collection("list")
+                            .doc(doc['title'])
+                            .delete();
+                        
                       },
                     ),
                   ),
