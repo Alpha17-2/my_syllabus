@@ -169,7 +169,7 @@ class subtopic extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: displayHeight(context) * 0.22,
+            top: displayHeight(context) * 0.28,
             child: Container(
               alignment: Alignment.center,
               height: displayHeight(context) * 0.74,

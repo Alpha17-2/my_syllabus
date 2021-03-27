@@ -42,7 +42,16 @@ class _mySyllabusState extends State<mySyllabus> {
             elevation: 15.0,
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+               gradient: LinearGradient(colors: [
+                  Color(0xfbb003366),
+                 Color(0xfbb003366)
+
+                 
+                 
+               ],
+               begin: Alignment.topLeft,
+               end: Alignment.bottomRight
+               ),
                 borderRadius: BorderRadius.circular(15.0),
               ),
               child: Stack(
@@ -281,16 +290,27 @@ class _mySyllabusState extends State<mySyllabus> {
               color: Color(0xfbbebf6f7),
             )),
             Positioned(
+              top: displayHeight(context)*0.2,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+                ),
+                height: displayHeight(context)*0.78,
+                width: displayWidth(context),
+                child: Opacity(opacity: 0.35,child: Image(image: AssetImage("images/d2.jpg"),height: displayHeight(context)*0.75,fit: BoxFit.fill,),),))
+           , Positioned(
               top: 0.0,
               width: displayWidth(context),
               child: Container(
-                height: displayHeight(context) * 0.25,
+                height: displayHeight(context) * 0.272,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     // Profile Picture
                     Positioned(
-                      top: displayHeight(context) * 0.064,
+                      top: displayHeight(context) * 0.07,
                       left: displayWidth(context) * 0.08,
                       child: Card(
                           color: Colors.blue[100],
@@ -304,7 +324,7 @@ class _mySyllabusState extends State<mySyllabus> {
                     // Profile Name
 
                     Positioned(
-                      top: displayHeight(context) * 0.082,
+                      top: displayHeight(context) * 0.088,
                       left: displayWidth(context) * 0.25,
                       child: Text(
                         currentUser.displayName,
@@ -328,14 +348,14 @@ class _mySyllabusState extends State<mySyllabus> {
                           signout(authNotifier);
                         },
                       ),
-                      top: displayHeight(context) * 0.064,
+                      top: displayHeight(context) * 0.072,
                       right: displayWidth(context) * 0.02,
                     ),
 
                     // Chosing Category
 
                     Positioned(
-                        top: displayHeight(context) * 0.16,
+                        top: displayHeight(context) * 0.175,
                         left: displayWidth(context) * 0.04,
                         right: displayWidth(context) * 0.04,
                         child: Container(
