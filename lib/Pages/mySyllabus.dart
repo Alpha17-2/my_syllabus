@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:Syllabus/Helper/DeviceSize.dart';
 import 'package:Syllabus/Helper/auth_notifier.dart';
 import 'package:Syllabus/Helper/syllabusapi.dart';
@@ -25,74 +27,66 @@ class _mySyllabusState extends State<mySyllabus> {
     // Displaying all data
 
     Widget displayAllData(BuildContext context, DocumentSnapshot doc) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => subtopic(
-                        topic: doc['title'],
-                      )));
-        },
-        child: GridTile(
+      String myTitle = doc['title'];
+      String imageLoc = "";
+      if (myTitle.toLowerCase().contains("chemistry"))
+        imageLoc = "images/chemistry.jpeg";
+      else if (myTitle.toLowerCase().contains("biology") ||
+          myTitle.toLowerCase() == "bio")
+        imageLoc = "images/biology.jpg";
+      else if (myTitle.toLowerCase().contains("physics"))
+        imageLoc = "images/physics.jpg";
+      else if (myTitle.toLowerCase().contains("operating system") ||
+          myTitle.toLowerCase().contains("os"))
+        imageLoc = "images/os.jpg";
+      else if (myTitle.toLowerCase().contains("english"))
+        imageLoc = "images/english.jpg";
+      else if (myTitle.toLowerCase().contains("commerce"))
+        imageLoc = "images/commerce.jpg";
+      else if (myTitle.toLowerCase().contains("computer"))
+        imageLoc = "images/computer.jpg";
+      else if (myTitle.toLowerCase().contains("history"))
+        imageLoc = "images/history.jpeg";
+      else if (myTitle.toLowerCase().contains("maths") ||
+          myTitle.toLowerCase().contains("mathematics") ||
+          myTitle.toLowerCase().contains("mathematic"))
+        imageLoc = "images/maths.jpg";
+      else if (myTitle.toLowerCase().contains("data structure"))
+        imageLoc = "images/datastructure.webp";
+      else if (myTitle.toLowerCase().contains("data science"))
+        imageLoc = "images/datascience.webp";
+      else if (myTitle.toLowerCase().contains("geography") ||
+          myTitle.toLowerCase() == ("geo"))
+        imageLoc = "images/geography.webp";
+      else if (myTitle.toLowerCase().contains("engineering drawing") ||
+          myTitle.toLowerCase() == "ed")
+        imageLoc = "images/ed.jpg";
+      else
+        imageLoc = "images/default.jpg";
 
-           child: Card(
-            
-             child: Stack(alignment: Alignment.center,
-             children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: Image.asset("images/e1.jpg",fit: BoxFit.fill,height: displayHeight(context)*0.2,),
-                  ),
-                  Positioned(
-                    top: displayHeight(context)*0.015,
-                    
-                    child: Image.asset("images/f2.png",height: displayHeight(context)*0.12,width: displayWidth(context)*0.3,fit: BoxFit.fill,),),
-              Positioned(
-                top: displayHeight(context)*0.01,
-                right: 0,
-                child:  IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        // To-do implementation
-                        FirebaseFirestore.instance
-                            .collection(currentUser.uid.toString())
-                            .doc("All")
-                            .collection("list")
-                            .doc(doc['title'])
-                            .delete();
-                        FirebaseFirestore.instance
-                            .collection(currentUser.uid.toString())
-                            .doc("Important")
-                            .collection("list")
-                            .doc(doc['title'])
-                            .delete();
-                        
-                      },
-                    ),
-                    
+      return GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => subtopic(
+                          topic: doc['title'],
+                        )));
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15.0),
+            child: GridTile(
+              child: Image.asset(
+                imageLoc,
+                height: displayHeight(context) * 0.035,
+                width: displayWidth(context) * 0.035,
+                fit: BoxFit.fitHeight,
               ),
-              
-             
-             ],
-             ),
-             color: Colors.grey,
-             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)
-             ),
-             
-             elevation: 20.0,
-           ),
-           footer: Card(
-            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(18.0),bottomLeft:Radius.circular(18.0) )),
-             child: GridTileBar(
-               title: Text(doc['title'],style: TextStyle(
-                 fontWeight: FontWeight.w400,
-                 fontSize: displayWidth(context)*0.032,
-               ),),backgroundColor: Colors.black54,
-               trailing: IconButton(
+              footer: GridTileBar(
+                trailing: IconButton(
                       icon: Icon(
                         doc['important'] ? Icons.star : Icons.star_border,
-                        color: Colors.yellow,
+                        color: Colors.red,
                       ),
                       onPressed: () {
                         // To-do implementation
@@ -125,12 +119,20 @@ class _mySyllabusState extends State<mySyllabus> {
                         }
                       },
                     ),
-               )
-               ),
+                
+                backgroundColor: Colors.grey[300],
+                title: Text(myTitle,style: TextStyle(
+                  color: Colors.black,
+                  fontSize: displayWidth(context)*0.036,
+                  fontWeight: FontWeight.w500,
+                ),),
+
+              ),
+
+            ),
+          
+          ),
         
-        
-        
-        ),
       );
     }
 
@@ -160,12 +162,12 @@ class _mySyllabusState extends State<mySyllabus> {
                 children: [
                   Positioned(
                     left: displayWidth(context) * 0.02,
-                    child:Card(
+                    child: Card(
                       elevation: 10.5,
                       color: Colors.blue[100],
                       child: Container(
-                        height: displayHeight(context)*0.14,
-                        width: displayWidth(context)*0.25,
+                        height: displayHeight(context) * 0.14,
+                        width: displayWidth(context) * 0.25,
                         child: Center(
                           child: Image(
                             image: AssetImage("images/a6.png"),
@@ -188,8 +190,6 @@ class _mySyllabusState extends State<mySyllabus> {
                       ),
                     ),
                   ),
-
-                
                 ],
               ),
               height: displayHeight(context) * 0.2,
@@ -231,12 +231,13 @@ class _mySyllabusState extends State<mySyllabus> {
                       ),
                     ]),
               );
-            return GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-
-            ), 
+            return GridView.builder(
+              padding: EdgeInsets.only(top:8.0),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 30,
+                mainAxisSpacing: 18,
+              ),
               itemBuilder: (BuildContext context, int index) {
                 return (category == 0)
                     ? displayAllData(context, snapshot.data.docs[index])
@@ -263,7 +264,7 @@ class _mySyllabusState extends State<mySyllabus> {
               width: displayWidth(context),
               color: Color(0xfbbebf6f7),
             )),
-            
+
             Positioned(
               top: 0.0,
               width: displayWidth(context),
@@ -387,21 +388,27 @@ class _mySyllabusState extends State<mySyllabus> {
             //
             Positioned(
               top: displayHeight(context) * 0.3,
-              bottom: displayHeight(context)*0.02,
+              bottom: displayHeight(context) * 0.02,
               child: Container(
-                alignment: Alignment.center,
-                height: displayHeight(context) * 0.74,
-                width: displayWidth(context) * 0.88,
-                //color: Colors.purple,
+                //color: Colors.green,
+                height: displayHeight(context)*0.7,
+                width: displayWidth(context)*0.92,
                 child: displayAllSyllabus(),
               ),
             ),
-           
+            
           ],
-                  ),
+        ),
         floatingActionButton: FloatingActionButton(
+          elevation: 15.0,
+          mini: false,
             backgroundColor: Colors.red[400],
-            child: Icon(Icons.add),
+            child: Center(
+              child: 
+                  Text("New",style: TextStyle(color:Colors.white,fontSize: displayWidth(context)*0.035,fontWeight: FontWeight.w500),)
+                
+              
+            ),
             onPressed: () {
               // to do
 
@@ -409,4 +416,3 @@ class _mySyllabusState extends State<mySyllabus> {
             }));
   }
 }
-
