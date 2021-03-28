@@ -34,69 +34,65 @@ class _mySyllabusState extends State<mySyllabus> {
                         topic: doc['title'],
                       )));
         },
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            elevation: 15.0,
-            child: Container(
-              decoration: BoxDecoration(
-               gradient: LinearGradient(colors: [
-                  Color(0xfbb003366),
-                 Color(0xfbb003366)
+        child: GridTile(
 
-                 
-                 
-               ],
-               begin: Alignment.topLeft,
-               end: Alignment.bottomRight
-               ),
-                borderRadius: BorderRadius.circular(15.0),
+           child: Card(
+            
+             child: Stack(alignment: Alignment.center,
+             children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: Image.asset("images/e1.jpg",fit: BoxFit.fill,height: displayHeight(context)*0.2,),
+                  ),
+                  Positioned(
+                    top: displayHeight(context)*0.015,
+                    
+                    child: Image.asset("images/f2.png",height: displayHeight(context)*0.12,width: displayWidth(context)*0.3,fit: BoxFit.fill,),),
+              Positioned(
+                top: displayHeight(context)*0.01,
+                right: 0,
+                child:  IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        // To-do implementation
+                        FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc("All")
+                            .collection("list")
+                            .doc(doc['title'])
+                            .delete();
+                        FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc("Important")
+                            .collection("list")
+                            .doc(doc['title'])
+                            .delete();
+                        
+                      },
+                    ),
+                    
               ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned(
-                    left: displayWidth(context) * 0.02,
-                    child:Card(
-                      elevation: 10.5,
-                      color: Colors.blue[100],
-                      child: Container(
-                        height: displayHeight(context)*0.14,
-                        width: displayWidth(context)*0.25,
-                        child: Center(
-                          child: Image(
-                            image: AssetImage("images/a6.png"),
-                            width: displayWidth(context) * 0.22,
-                            height: displayHeight(context) * 0.12,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: displayHeight(context) * 0.08,
-                    left: displayWidth(context) * 0.37,
-                    child: Text(
-                      doc['title'],
-                      style: TextStyle(
-                        fontSize: displayWidth(context) * 0.055,
-                        fontFamily: "PatuaOne",
-                      ),
-                    ),
-                  ),
-
-                  // Mark important
-
-                  Positioned(
-                    top: displayHeight(context) * 0.0115,
-                    right: displayWidth(context) * 0.02,
-                    child: IconButton(
+              
+             
+             ],
+             ),
+             color: Colors.grey,
+             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)
+             ),
+             
+             elevation: 20.0,
+           ),
+           footer: Card(
+            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(18.0),bottomLeft:Radius.circular(18.0) )),
+             child: GridTileBar(
+               title: Text(doc['title'],style: TextStyle(
+                 fontWeight: FontWeight.w400,
+                 fontSize: displayWidth(context)*0.032,
+               ),),backgroundColor: Colors.black54,
+               trailing: IconButton(
                       icon: Icon(
                         doc['important'] ? Icons.star : Icons.star_border,
-                        color: Colors.purple,
+                        color: Colors.yellow,
                       ),
                       onPressed: () {
                         // To-do implementation
@@ -129,38 +125,11 @@ class _mySyllabusState extends State<mySyllabus> {
                         }
                       },
                     ),
-                  ),
-
-                  // Delete Syllabus
-
-                  Positioned(
-                    bottom: displayHeight(context) * 0.00,
-                    right: displayWidth(context) * 0.02,
-                    child: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        // To-do implementation
-                        FirebaseFirestore.instance
-                            .collection(currentUser.uid.toString())
-                            .doc("All")
-                            .collection("list")
-                            .doc(doc['title'])
-                            .delete();
-                        FirebaseFirestore.instance
-                            .collection(currentUser.uid.toString())
-                            .doc("Important")
-                            .collection("list")
-                            .doc(doc['title'])
-                            .delete();
-                        
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              height: displayHeight(context) * 0.2,
-            ),
-          ),
+               )
+               ),
+        
+        
+        
         ),
       );
     }
@@ -262,7 +231,12 @@ class _mySyllabusState extends State<mySyllabus> {
                       ),
                     ]),
               );
-            return ListView.builder(
+            return GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 15,
+              mainAxisSpacing: 15,
+
+            ), 
               itemBuilder: (BuildContext context, int index) {
                 return (category == 0)
                     ? displayAllData(context, snapshot.data.docs[index])
@@ -289,18 +263,8 @@ class _mySyllabusState extends State<mySyllabus> {
               width: displayWidth(context),
               color: Color(0xfbbebf6f7),
             )),
+            
             Positioned(
-              top: displayHeight(context)*0.2,
-              left: 0,
-              right: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
-                ),
-                height: displayHeight(context)*0.78,
-                width: displayWidth(context),
-                child: Opacity(opacity: 0.35,child: Image(image: AssetImage("images/d2.jpg"),height: displayHeight(context)*0.75,fit: BoxFit.fill,),),))
-           , Positioned(
               top: 0.0,
               width: displayWidth(context),
               child: Container(
@@ -422,17 +386,19 @@ class _mySyllabusState extends State<mySyllabus> {
 
             //
             Positioned(
-              top: displayHeight(context) * 0.26,
+              top: displayHeight(context) * 0.3,
+              bottom: displayHeight(context)*0.02,
               child: Container(
                 alignment: Alignment.center,
                 height: displayHeight(context) * 0.74,
-                width: displayWidth(context) * 0.85,
+                width: displayWidth(context) * 0.88,
                 //color: Colors.purple,
                 child: displayAllSyllabus(),
               ),
             ),
+           
           ],
-        ),
+                  ),
         floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.red[400],
             child: Icon(Icons.add),
@@ -443,3 +409,4 @@ class _mySyllabusState extends State<mySyllabus> {
             }));
   }
 }
+
