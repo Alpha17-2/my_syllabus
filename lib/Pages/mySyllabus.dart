@@ -65,74 +65,73 @@ class _mySyllabusState extends State<mySyllabus> {
         imageLoc = "images/default.jpg";
 
       return GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => subtopic(
-                          topic: doc['title'],
-                        )));
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: GridTile(
-              child: Image.asset(
-                imageLoc,
-                height: displayHeight(context) * 0.035,
-                width: displayWidth(context) * 0.035,
-                fit: BoxFit.fitHeight,
-              ),
-              footer: GridTileBar(
-                trailing: IconButton(
-                      icon: Icon(
-                        doc['important'] ? Icons.star : Icons.star_border,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        // To-do implementation
-                        if (doc['important']) {
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("All")
-                              .collection("list")
-                              .doc(doc['title'])
-                              .update({"important": false});
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("Important")
-                              .collection("list")
-                              .doc(doc['title'])
-                              .delete();
-                        } else {
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("Important")
-                              .collection("list")
-                              .doc(doc['title'])
-                              .set({"title": doc['title'], "important": true});
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("All")
-                              .collection("list")
-                              .doc(doc['title'])
-                              .update({"important": true});
-                        }
-                      },
-                    ),
-                
-                backgroundColor: Colors.grey[300],
-                title: Text(myTitle,style: TextStyle(
-                  color: Colors.black,
-                  fontSize: displayWidth(context)*0.036,
-                  fontWeight: FontWeight.w500,
-                ),),
-
-              ),
-
+        onLongPress: () => showAlertDialog(context, myTitle),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => subtopic(
+                        topic: doc['title'],
+                      )));
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15.0),
+          child: GridTile(
+            child: Image.asset(
+              imageLoc,
+              height: displayHeight(context) * 0.035,
+              width: displayWidth(context) * 0.035,
+              fit: BoxFit.fitHeight,
             ),
-          
+            footer: GridTileBar(
+              trailing: IconButton(
+                icon: Icon(
+                  doc['important'] ? Icons.star : Icons.star_border,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  // To-do implementation
+                  if (doc['important']) {
+                    FirebaseFirestore.instance
+                        .collection(currentUser.uid.toString())
+                        .doc("All")
+                        .collection("list")
+                        .doc(doc['title'])
+                        .update({"important": false});
+                    FirebaseFirestore.instance
+                        .collection(currentUser.uid.toString())
+                        .doc("Important")
+                        .collection("list")
+                        .doc(doc['title'])
+                        .delete();
+                  } else {
+                    FirebaseFirestore.instance
+                        .collection(currentUser.uid.toString())
+                        .doc("Important")
+                        .collection("list")
+                        .doc(doc['title'])
+                        .set({"title": doc['title'], "important": true});
+                    FirebaseFirestore.instance
+                        .collection(currentUser.uid.toString())
+                        .doc("All")
+                        .collection("list")
+                        .doc(doc['title'])
+                        .update({"important": true});
+                  }
+                },
+              ),
+              backgroundColor: Colors.grey[300],
+              title: Text(
+                myTitle,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: displayWidth(context) * 0.036,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ),
-        
+        ),
       );
     }
 
@@ -232,7 +231,7 @@ class _mySyllabusState extends State<mySyllabus> {
                     ]),
               );
             return GridView.builder(
-              padding: EdgeInsets.only(top:8.0),
+              padding: EdgeInsets.only(top: 8.0),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 30,
@@ -391,28 +390,75 @@ class _mySyllabusState extends State<mySyllabus> {
               bottom: displayHeight(context) * 0.02,
               child: Container(
                 //color: Colors.green,
-                height: displayHeight(context)*0.7,
-                width: displayWidth(context)*0.92,
+                height: displayHeight(context) * 0.7,
+                width: displayWidth(context) * 0.92,
                 child: displayAllSyllabus(),
               ),
             ),
-            
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          elevation: 15.0,
-          mini: false,
+            elevation: 15.0,
+            mini: false,
             backgroundColor: Colors.red[400],
             child: Center(
-              child: 
-                  Text("New",style: TextStyle(color:Colors.white,fontSize: displayWidth(context)*0.035,fontWeight: FontWeight.w500),)
-                
-              
-            ),
+                child: Text(
+              "New",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: displayWidth(context) * 0.035,
+                  fontWeight: FontWeight.w500),
+            )),
             onPressed: () {
               // to do
 
               AddNdewSubject(context);
             }));
   }
+}
+
+showAlertDialog(BuildContext context, String title) {
+  // set up the buttons
+  User currentUser = FirebaseAuth.instance.currentUser;
+  Widget cancelButton = TextButton(
+    child: Text("No"),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+  Widget continueButton = TextButton(
+    child: Text("Yes"),
+    onPressed: () {
+      FirebaseFirestore.instance
+          .collection(currentUser.uid.toString())
+          .doc("All")
+          .collection("list")
+          .doc(title)
+          .delete();
+      FirebaseFirestore.instance
+          .collection(currentUser.uid.toString())
+          .doc("Important")
+          .collection("list")
+          .doc(title)
+          .delete();
+
+      Navigator.pop(context);
+    },
+  );
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Delete Subject"),
+    content: Text("Are you sure you want to delete this subject ?"),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
