@@ -64,116 +64,9 @@ class _mySyllabusState extends State<mySyllabus> {
       else
         imageLoc = "images/default.jpg";
 
-      return GestureDetector(
-        onLongPress: () => showAlertDialog(context, myTitle),
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => subtopic(
-                        topic: doc['title'],
-                      )));
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15.0),
-          child: GridTile(
-            child: Image.asset(
-              imageLoc,
-              height: displayHeight(context) * 0.035,
-              width: displayWidth(context) * 0.035,
-              fit: BoxFit.fitHeight,
-            ),
-            footer: GridTileBar(
-              trailing: IconButton(
-                icon: Icon(
-                  doc['important'] ? Icons.star : Icons.star_border,
-                  color: Colors.red,
-                ),
-                onPressed: () {
-                  // To-do implementation
-                  if (doc['important']) {
-                    FirebaseFirestore.instance
-                        .collection(currentUser.uid.toString())
-                        .doc("All")
-                        .collection("list")
-                        .doc(doc['title'])
-                        .update({"important": false});
-                    FirebaseFirestore.instance
-                        .collection(currentUser.uid.toString())
-                        .doc("Important")
-                        .collection("list")
-                        .doc(doc['title'])
-                        .delete();
-                  } else {
-                    FirebaseFirestore.instance
-                        .collection(currentUser.uid.toString())
-                        .doc("Important")
-                        .collection("list")
-                        .doc(doc['title'])
-                        .set({"title": doc['title'], "important": true});
-                    FirebaseFirestore.instance
-                        .collection(currentUser.uid.toString())
-                        .doc("All")
-                        .collection("list")
-                        .doc(doc['title'])
-                        .update({"important": true});
-                  }
-                },
-              ),
-              backgroundColor: Colors.grey[300],
-              title: Text(
-                myTitle,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: displayWidth(context) * 0.036,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    Widget displayImportatntData(BuildContext context, DocumentSnapshot doc) {
-      String myTitle = doc['title'];
-      String imageLoc = "";
-      if (myTitle.toLowerCase().contains("chemistry"))
-        imageLoc = "images/chemistry.jpeg";
-      else if (myTitle.toLowerCase().contains("biology") ||
-          myTitle.toLowerCase() == "bio")
-        imageLoc = "images/biology.jpg";
-      else if (myTitle.toLowerCase().contains("physics"))
-        imageLoc = "images/physics.jpg";
-      else if (myTitle.toLowerCase().contains("operating system") ||
-          myTitle.toLowerCase().contains("os"))
-        imageLoc = "images/os.jpg";
-      else if (myTitle.toLowerCase().contains("english"))
-        imageLoc = "images/english.jpg";
-      else if (myTitle.toLowerCase().contains("commerce"))
-        imageLoc = "images/commerce.jpg";
-      else if (myTitle.toLowerCase().contains("computer"))
-        imageLoc = "images/computer.jpg";
-      else if (myTitle.toLowerCase().contains("history"))
-        imageLoc = "images/history.jpeg";
-      else if (myTitle.toLowerCase().contains("maths") ||
-          myTitle.toLowerCase().contains("mathematics") ||
-          myTitle.toLowerCase().contains("mathematic"))
-        imageLoc = "images/maths.jpg";
-      else if (myTitle.toLowerCase().contains("data structure"))
-        imageLoc = "images/datastructure.webp";
-      else if (myTitle.toLowerCase().contains("data science"))
-        imageLoc = "images/datascience.webp";
-      else if (myTitle.toLowerCase().contains("geography") ||
-          myTitle.toLowerCase() == ("geo"))
-        imageLoc = "images/geography.webp";
-      else if (myTitle.toLowerCase().contains("engineering drawing") ||
-          myTitle.toLowerCase() == "ed")
-        imageLoc = "images/ed.jpg";
-      else
-        imageLoc = "images/default.jpg";
-
-      return GestureDetector(
+      return Hero(
+        tag: myTitle,
+              child: GestureDetector(
           onLongPress: () => showAlertDialog(context, myTitle),
           onTap: () {
             Navigator.push(
@@ -181,6 +74,7 @@ class _mySyllabusState extends State<mySyllabus> {
                 MaterialPageRoute(
                     builder: (context) => subtopic(
                           topic: doc['title'],
+                          isfav: doc['important'],
                         )));
           },
           child: ClipRRect(
@@ -240,7 +134,120 @@ class _mySyllabusState extends State<mySyllabus> {
                 ),
               ),
             ),
-          ),);
+          ),
+        ),
+      );
+    }
+
+    Widget displayImportatntData(BuildContext context, DocumentSnapshot doc) {
+      String myTitle = doc['title'];
+      String imageLoc = "";
+      if (myTitle.toLowerCase().contains("chemistry"))
+        imageLoc = "images/chemistry.jpeg";
+      else if (myTitle.toLowerCase().contains("biology") ||
+          myTitle.toLowerCase() == "bio")
+        imageLoc = "images/biology.jpg";
+      else if (myTitle.toLowerCase().contains("physics"))
+        imageLoc = "images/physics.jpg";
+      else if (myTitle.toLowerCase().contains("operating system") ||
+          myTitle.toLowerCase().contains("os"))
+        imageLoc = "images/os.jpg";
+      else if (myTitle.toLowerCase().contains("english"))
+        imageLoc = "images/english.jpg";
+      else if (myTitle.toLowerCase().contains("commerce"))
+        imageLoc = "images/commerce.jpg";
+      else if (myTitle.toLowerCase().contains("computer"))
+        imageLoc = "images/computer.jpg";
+      else if (myTitle.toLowerCase().contains("history"))
+        imageLoc = "images/history.jpeg";
+      else if (myTitle.toLowerCase().contains("maths") ||
+          myTitle.toLowerCase().contains("mathematics") ||
+          myTitle.toLowerCase().contains("mathematic"))
+        imageLoc = "images/maths.jpg";
+      else if (myTitle.toLowerCase().contains("data structure"))
+        imageLoc = "images/datastructure.webp";
+      else if (myTitle.toLowerCase().contains("data science"))
+        imageLoc = "images/datascience.webp";
+      else if (myTitle.toLowerCase().contains("geography") ||
+          myTitle.toLowerCase() == ("geo"))
+        imageLoc = "images/geography.webp";
+      else if (myTitle.toLowerCase().contains("engineering drawing") ||
+          myTitle.toLowerCase() == "ed")
+        imageLoc = "images/ed.jpg";
+      else
+        imageLoc = "images/default.jpg";
+
+      return Hero(
+        tag: myTitle,
+              child: GestureDetector(
+            onLongPress: () => showAlertDialog(context, myTitle),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => subtopic(
+                            topic: doc['title'],isfav: doc['important'],
+                          )));
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: GridTile(
+                child: Image.asset(
+                  imageLoc,
+                  height: displayHeight(context) * 0.035,
+                  width: displayWidth(context) * 0.035,
+                  fit: BoxFit.fitHeight,
+                ),
+                footer: GridTileBar(
+                  trailing: IconButton(
+                    icon: Icon(
+                      doc['important'] ? Icons.star : Icons.star_border,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {
+                      // To-do implementation
+                      if (doc['important']) {
+                        FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc("All")
+                            .collection("list")
+                            .doc(doc['title'])
+                            .update({"important": false});
+                        FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc("Important")
+                            .collection("list")
+                            .doc(doc['title'])
+                            .delete();
+                      } else {
+                        FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc("Important")
+                            .collection("list")
+                            .doc(doc['title'])
+                            .set({"title": doc['title'], "important": true});
+                        FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc("All")
+                            .collection("list")
+                            .doc(doc['title'])
+                            .update({"important": true});
+                      }
+                    },
+                  ),
+                  backgroundColor: Colors.grey[300],
+                  title: Text(
+                    myTitle,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: displayWidth(context) * 0.036,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),),
+      );
     }
 
     Widget displayAllSyllabus() {

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:Syllabus/Helper/syllabusapi.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,9 @@ import 'package:Syllabus/Helper/DeviceSize.dart';
 
 class subtopic extends StatelessWidget {
   final String topic;
-  subtopic({this.topic});
+  @required
+  bool isfav;
+  subtopic({this.topic, this.isfav});
   @override
   Widget build(BuildContext context) {
     User currentUser = FirebaseAuth.instance.currentUser;
@@ -42,7 +46,6 @@ class subtopic extends StatelessWidget {
                   child: IconButton(
                       icon: Icon(
                         doc['complete'] ? Icons.done : Icons.close,
-                        
                       ),
                       color: doc['complete'] ? Colors.green : Colors.red,
                       onPressed: () {
@@ -90,7 +93,6 @@ class subtopic extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                     
                       FirebaseFirestore.instance
                           .collection(currentUser.uid.toString())
                           .doc("All")
@@ -110,6 +112,43 @@ class subtopic extends StatelessWidget {
       );
     }
 
+    String myTitle = topic;
+    String imageLoc = "";
+    if (myTitle.toLowerCase().contains("chemistry"))
+      imageLoc = "images/chemistry.jpeg";
+    else if (myTitle.toLowerCase().contains("biology") ||
+        myTitle.toLowerCase() == "bio")
+      imageLoc = "images/biology.jpg";
+    else if (myTitle.toLowerCase().contains("physics"))
+      imageLoc = "images/physics.jpg";
+    else if (myTitle.toLowerCase().contains("operating system") ||
+        myTitle.toLowerCase().contains("os"))
+      imageLoc = "images/os.jpg";
+    else if (myTitle.toLowerCase().contains("english"))
+      imageLoc = "images/english.jpg";
+    else if (myTitle.toLowerCase().contains("commerce"))
+      imageLoc = "images/commerce.jpg";
+    else if (myTitle.toLowerCase().contains("computer"))
+      imageLoc = "images/computer.jpg";
+    else if (myTitle.toLowerCase().contains("history"))
+      imageLoc = "images/history.jpeg";
+    else if (myTitle.toLowerCase().contains("maths") ||
+        myTitle.toLowerCase().contains("mathematics") ||
+        myTitle.toLowerCase().contains("mathematic"))
+      imageLoc = "images/maths.jpg";
+    else if (myTitle.toLowerCase().contains("data structure"))
+      imageLoc = "images/datastructure.webp";
+    else if (myTitle.toLowerCase().contains("data science"))
+      imageLoc = "images/datascience.webp";
+    else if (myTitle.toLowerCase().contains("geography") ||
+        myTitle.toLowerCase() == ("geo"))
+      imageLoc = "images/geography.webp";
+    else if (myTitle.toLowerCase().contains("engineering drawing") ||
+        myTitle.toLowerCase() == "ed")
+      imageLoc = "images/ed.jpg";
+    else
+      imageLoc = "images/default.jpg";
+
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
@@ -125,35 +164,79 @@ class subtopic extends StatelessWidget {
             top: 0.0,
             width: displayWidth(context),
             child: Container(
-              height: displayHeight(context) * 0.25,
+              height: displayHeight(context) * 0.3,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  // Navigating back
                   Positioned(
-                      top: displayHeight(context) * 0.064,
-                      left: displayWidth(context) * 0.04,
-                      child: IconButton(
-                        color: Colors.white,
-                        icon: Icon(Icons.arrow_back_ios,
-                            size: displayWidth(context) * 0.06),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      )),
+                    top: displayHeight(context) * 0.035,
+                    right: displayWidth(context) * 0.04,
+                    child: IconButton(
+                      color: Colors.white,
+                      icon: Icon(Icons.arrow_back_ios,
+                          size: displayWidth(context) * 0.06),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+
+                  // Topic image
+                  Positioned(
+                    top: displayHeight(context) * 0.052,
+                    left: displayWidth(context) * 0.04,
+                    child: Hero(
+                      tag: myTitle,
+                                          child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        elevation: 40.0,
+                        borderOnForeground: true,
+                        shadowColor: Colors.red,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(18.0),
+                          child: Image.asset(
+                            imageLoc,
+                            height: displayHeight(context) * 0.165,
+                            width: displayWidth(context) * 0.33,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
 
                   // Topic Name
 
                   Positioned(
-                    top: displayHeight(context) * 0.18,
+                    left: displayWidth(context) * 0.06,
+                    top: displayHeight(context) * 0.235,
                     child: Text(
                       topic,
                       style: TextStyle(
                           fontFamily: "PatuaOne",
                           letterSpacing: 1.3,
                           color: Colors.white,
-                          fontSize: displayWidth(context) * 0.055),
+                          fontSize: displayWidth(context) * 0.0445),
                     ),
                   ),
+
+                  // favourite Subject !!
+
+                  Positioned(
+                    top: displayHeight(context)*0.09,
+                    right: displayWidth(context)*0.04,                      child: IconButton(
+                    onPressed: () {
+                  
+                    },
+                    icon: Icon(isfav
+                        ? Icons.favorite
+                        : Icons.favorite_border_outlined),
+                    color: Colors.yellow,
+                    iconSize: displayWidth(context)*0.1,
+                  )),
                 ],
               ),
               decoration: BoxDecoration(
