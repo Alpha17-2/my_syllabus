@@ -286,8 +286,8 @@ class _mySyllabusState extends State<mySyllabus> {
               padding: EdgeInsets.only(top: 8.0),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 30,
-                mainAxisSpacing: 18,
+                crossAxisSpacing: 35,
+                mainAxisSpacing: 20,
               ),
               itemBuilder: (BuildContext context, int index) {
                 return (category == 0)

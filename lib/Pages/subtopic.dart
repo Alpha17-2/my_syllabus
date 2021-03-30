@@ -170,8 +170,8 @@ class subtopic extends StatelessWidget {
                 children: [
                   // Navigating back
                   Positioned(
-                    top: displayHeight(context) * 0.035,
-                    right: displayWidth(context) * 0.04,
+                    top: displayHeight(context) * 0.048,
+                    left: displayWidth(context) * 0.04,
                     child: IconButton(
                       color: Colors.white,
                       icon: Icon(Icons.arrow_back_ios,
@@ -185,14 +185,14 @@ class subtopic extends StatelessWidget {
                   // Topic image
                   Positioned(
                     top: displayHeight(context) * 0.052,
-                    left: displayWidth(context) * 0.04,
+                    right: displayWidth(context) * 0.04,
                     child: Hero(
                       tag: myTitle,
                                           child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         ),
-                        elevation: 40.0,
+                    //elevation: 40.0,
                         borderOnForeground: true,
                         shadowColor: Colors.red,
                         child: ClipRRect(
@@ -211,7 +211,7 @@ class subtopic extends StatelessWidget {
                   // Topic Name
 
                   Positioned(
-                    left: displayWidth(context) * 0.06,
+                    right: displayWidth(context) * 0.06,
                     top: displayHeight(context) * 0.235,
                     child: Text(
                       topic,
@@ -226,8 +226,8 @@ class subtopic extends StatelessWidget {
                   // favourite Subject !!
 
                   Positioned(
-                    top: displayHeight(context)*0.09,
-                    right: displayWidth(context)*0.04,                      child: IconButton(
+                    top: displayHeight(context)*0.2,
+                    left: displayWidth(context)*0.04,                      child: IconButton(
                     onPressed: () {
                   
                     },
