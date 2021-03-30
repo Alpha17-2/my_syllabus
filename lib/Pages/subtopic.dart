@@ -6,12 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Syllabus/Helper/DeviceSize.dart';
 
-class subtopic extends StatelessWidget {
+class subtopic extends StatefulWidget {
   final String topic;
   @required
   bool isfav;
   subtopic({this.topic, this.isfav});
+
   @override
+  _subtopicState createState() => _subtopicState();
+}
+
+class _subtopicState extends State<subtopic> {
+  @override
+
+  int category = 0;
+
+  final listOfCategory2 = ["Complete", "Pending"];
+
   Widget build(BuildContext context) {
     User currentUser = FirebaseAuth.instance.currentUser;
     Widget displayData(BuildContext context, DocumentSnapshot doc) {
@@ -54,8 +65,8 @@ class subtopic extends StatelessWidget {
                               .collection(currentUser.uid.toString())
                               .doc("All")
                               .collection("list")
-                              .doc(topic)
-                              .collection(topic)
+                              .doc(widget.topic)
+                              .collection(widget.topic)
                               .doc(doc['title'])
                               .update({"complete": false});
                         } else {
@@ -63,8 +74,8 @@ class subtopic extends StatelessWidget {
                               .collection(currentUser.uid.toString())
                               .doc("All")
                               .collection("list")
-                              .doc(topic)
-                              .collection(topic)
+                              .doc(widget.topic)
+                              .collection(widget.topic)
                               .doc(doc['title'])
                               .update({"complete": true});
                         }
@@ -97,8 +108,8 @@ class subtopic extends StatelessWidget {
                           .collection(currentUser.uid.toString())
                           .doc("All")
                           .collection("list")
-                          .doc(topic)
-                          .collection(topic)
+                          .doc(widget.topic)
+                          .collection(widget.topic)
                           .doc(doc['title'])
                           .delete();
                     },
@@ -112,7 +123,7 @@ class subtopic extends StatelessWidget {
       );
     }
 
-    String myTitle = topic;
+    String myTitle = widget.topic;
     String imageLoc = "";
     if (myTitle.toLowerCase().contains("chemistry"))
       imageLoc = "images/chemistry.jpeg";
@@ -170,8 +181,8 @@ class subtopic extends StatelessWidget {
                 children: [
                   // Navigating back
                   Positioned(
-                    top: displayHeight(context) * 0.048,
-                    left: displayWidth(context) * 0.04,
+                    top: displayHeight(context) * 0.05,
+                    left: displayWidth(context) * 0.06,
                     child: IconButton(
                       color: Colors.white,
                       icon: Icon(Icons.arrow_back_ios,
@@ -214,7 +225,7 @@ class subtopic extends StatelessWidget {
                     right: displayWidth(context) * 0.06,
                     top: displayHeight(context) * 0.235,
                     child: Text(
-                      topic,
+                      widget.topic,
                       style: TextStyle(
                           fontFamily: "PatuaOne",
                           letterSpacing: 1.3,
@@ -226,17 +237,26 @@ class subtopic extends StatelessWidget {
                   // favourite Subject !!
 
                   Positioned(
-                    top: displayHeight(context)*0.2,
-                    left: displayWidth(context)*0.04,                      child: IconButton(
-                    onPressed: () {
+                    top: displayHeight(context)*0.17,
+                    left: displayWidth(context)*0.04,                      
+                    child: CircleAvatar(
+                      radius: displayWidth(context)*0.085,
+                      backgroundColor: Colors.green,
+                      child: CircleAvatar(
+                        radius: displayWidth(context)*0.075,
+                        backgroundColor: Colors.grey[300],
+                                              child: IconButton(
+                        onPressed: () {
                   
-                    },
-                    icon: Icon(isfav
-                        ? Icons.favorite
-                        : Icons.favorite_border_outlined),
-                    color: Colors.yellow,
-                    iconSize: displayWidth(context)*0.1,
-                  )),
+                        },
+                        icon: Icon(widget.isfav
+                            ? Icons.favorite
+                            : Icons.favorite_border_outlined),
+                        color: Colors.red,
+                        iconSize: displayWidth(context)*0.1,
+                  ),
+                      ),
+                    )),
                 ],
               ),
               decoration: BoxDecoration(
@@ -252,7 +272,60 @@ class subtopic extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: displayHeight(context) * 0.28,
+                        top: displayHeight(context) * 0.32,
+                        left: displayWidth(context) * 0.04,
+                        right: displayWidth(context) * 0.04,
+                        child: Container(
+                          child: ListView.builder(
+                            itemBuilder: (BuildContext context, int current) {
+                              return GestureDetector(
+                                onTap: () {
+                                  print("tap");
+                                  setState(() {
+                                    category = current;
+                                  });
+                                  print(category);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 18.0,
+                                      bottom: 10.0,
+                                      left: 60.0,
+                                      right: 50.0),
+                                  child: Text(
+                                    listOfCategory2[current],
+                                    style: TextStyle(
+                                      color: (current == category)
+                                          ? Colors.white
+                                          : Colors.white60,
+                                      fontSize: displayWidth(context) * 0.045,
+                                      fontWeight: (current == category)
+                                          ? FontWeight.bold
+                                          : FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: listOfCategory2.length,
+                            scrollDirection: Axis.horizontal,
+                          ),
+                          height: displayHeight(context) * 0.075,
+                          width: displayWidth(context) * 0.64,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(image: AssetImage("images/a4.jpg",),fit:BoxFit.cover),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30),
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                          ),
+                        ))
+                 ,
+
+          Positioned(
+            top: displayHeight(context) * 0.4,
             child: Container(
               alignment: Alignment.center,
               height: displayHeight(context) * 0.74,
@@ -300,8 +373,8 @@ class subtopic extends StatelessWidget {
                       .collection(currentUser.uid.toString())
                       .doc("All")
                       .collection("list")
-                      .doc(topic)
-                      .collection(topic)
+                      .doc(widget.topic)
+                      .collection(widget.topic)
                       .snapshots()),
             ),
           )
@@ -312,7 +385,7 @@ class subtopic extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () {
           // to do
-          AddNdewSubtopic(context, topic);
+          AddNdewSubtopic(context, widget.topic);
         },
       ),
     );
