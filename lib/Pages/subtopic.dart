@@ -21,12 +21,15 @@ class _subtopicState extends State<subtopic> {
 
   int category = 0;
 
-  final listOfCategory2 = ["Complete", "Pending"];
+  final listOfCategory2 = ["All","Complete", "Pending"];
 
   Widget build(BuildContext context) {
     User currentUser = FirebaseAuth.instance.currentUser;
     Widget displayData(BuildContext context, DocumentSnapshot doc) {
-      return Padding(
+
+      if(category==0)
+      {
+          return Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Card(
           shape:
@@ -54,13 +57,11 @@ class _subtopicState extends State<subtopic> {
                   ),
                 ),
                 Positioned(
-                  child: IconButton(
-                      icon: Icon(
-                        doc['complete'] ? Icons.done : Icons.close,
-                      ),
-                      color: doc['complete'] ? Colors.green : Colors.red,
-                      onPressed: () {
-                        if (doc['complete']) {
+                  child:  Checkbox(
+                    value: doc['complete'] ,
+                    activeColor: doc['complete']?Colors.green:Colors.red,
+                    onChanged: (value) {
+                      if (doc['complete']) {
                           FirebaseFirestore.instance
                               .collection(currentUser.uid.toString())
                               .doc("All")
@@ -79,7 +80,14 @@ class _subtopicState extends State<subtopic> {
                               .doc(doc['title'])
                               .update({"complete": true});
                         }
-                      }),
+                    },
+
+                  ),
+
+                  
+                  
+                  
+                
                   top: displayHeight(context) * 0.0115,
                   right: displayWidth(context) * 0.02,
                 ),
@@ -121,6 +129,209 @@ class _subtopicState extends State<subtopic> {
           ),
         ),
       );
+
+      } 
+
+      else if(category==1) // Complete
+      {
+        if(doc['complete'])
+        return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          elevation: 15.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  left: displayWidth(context) * 0.02,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.lightBlue[100],
+                    radius: displayWidth(context) * 0.135,
+                    child: Image(
+                      image: AssetImage("images/b2.png"),
+                      width: displayWidth(context) * 0.18,
+                      height: displayHeight(context) * 0.1,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  child:  Checkbox(
+                    value: doc['complete'] ,
+                    activeColor: doc['complete']?Colors.green:Colors.red,
+                    onChanged: (value) {
+                      if (doc['complete']) {
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection(widget.topic)
+                              .doc(doc['title'])
+                              .update({"complete": false});
+                        } else {
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection(widget.topic)
+                              .doc(doc['title'])
+                              .update({"complete": true});
+                        }
+                    },
+
+                  ),       
+                  top: displayHeight(context) * 0.0115,
+                  right: displayWidth(context) * 0.02,
+                ),
+                Positioned(
+                  top: displayHeight(context) * 0.085,
+                  left: displayWidth(context) * 0.34,
+                  right: displayWidth(context) * 0.1,
+                  child: Text(
+                    doc['title'],
+                    style: TextStyle(
+                      fontSize: displayWidth(context) * 0.042,
+                      fontFamily: "PatuaOne",
+                    ),
+                  ),
+                ),
+
+                // Delete Syllabus
+
+                Positioned(
+                  bottom: displayHeight(context) * 0.00,
+                  right: displayWidth(context) * 0.02,
+                  child: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      FirebaseFirestore.instance
+                          .collection(currentUser.uid.toString())
+                          .doc("All")
+                          .collection("list")
+                          .doc(widget.topic)
+                          .collection(widget.topic)
+                          .doc(doc['title'])
+                          .delete();
+                    },
+                  ),
+                ),
+              ],
+            ),
+            height: displayHeight(context) * 0.2,
+          ),
+        ),
+      );
+      } 
+
+      else // Pending
+      {
+        if(!doc['complete'])
+        return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          elevation: 15.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  left: displayWidth(context) * 0.02,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.lightBlue[100],
+                    radius: displayWidth(context) * 0.135,
+                    child: Image(
+                      image: AssetImage("images/b2.png"),
+                      width: displayWidth(context) * 0.18,
+                      height: displayHeight(context) * 0.1,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  child:  Checkbox(
+                    value: doc['complete'] ,
+                    activeColor: doc['complete']?Colors.green:Colors.red,
+                    onChanged: (value) {
+                      if (doc['complete']) {
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection(widget.topic)
+                              .doc(doc['title'])
+                              .update({"complete": false});
+                        } else {
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection(widget.topic)
+                              .doc(doc['title'])
+                              .update({"complete": true});
+                        }
+                    },
+
+                  ),
+                  top: displayHeight(context) * 0.0115,
+                  right: displayWidth(context) * 0.02,
+                ),
+                Positioned(
+                  top: displayHeight(context) * 0.085,
+                  left: displayWidth(context) * 0.34,
+                  right: displayWidth(context) * 0.1,
+                  child: Text(
+                    doc['title'],
+                    style: TextStyle(
+                      fontSize: displayWidth(context) * 0.042,
+                      fontFamily: "PatuaOne",
+                    ),
+                  ),
+                ),
+
+                // Delete Syllabus
+
+                Positioned(
+                  bottom: displayHeight(context) * 0.00,
+                  right: displayWidth(context) * 0.02,
+                  child: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      FirebaseFirestore.instance
+                          .collection(currentUser.uid.toString())
+                          .doc("All")
+                          .collection("list")
+                          .doc(widget.topic)
+                          .collection(widget.topic)
+                          .doc(doc['title'])
+                          .delete();
+                    },
+                  ),
+                ),
+              ],
+            ),
+            height: displayHeight(context) * 0.2,
+          ),
+        ),
+      );
+      }
+      
     }
 
     String myTitle = widget.topic;
@@ -241,10 +452,10 @@ class _subtopicState extends State<subtopic> {
                     left: displayWidth(context)*0.04,                      
                     child: CircleAvatar(
                       radius: displayWidth(context)*0.085,
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.black,
                       child: CircleAvatar(
                         radius: displayWidth(context)*0.075,
-                        backgroundColor: Colors.grey[300],
+                        backgroundColor: Colors.white,
                                               child: IconButton(
                         onPressed: () {
                   
@@ -290,8 +501,8 @@ class _subtopicState extends State<subtopic> {
                                   padding: EdgeInsets.only(
                                       top: 18.0,
                                       bottom: 10.0,
-                                      left: 60.0,
-                                      right: 50.0),
+                                      left: 42.0,
+                                      right: 20.0),
                                   child: Text(
                                     listOfCategory2[current],
                                     style: TextStyle(
