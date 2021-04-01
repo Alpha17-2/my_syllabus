@@ -135,7 +135,14 @@ void AddNdewSubtopic(BuildContext context,String topic) async {
         actions: [
           MaterialButton(
             onPressed: () {
-               FirebaseFirestore.instance.collection(currentUser.uid.toString()).doc("All").collection("list").doc(topic).collection(topic).doc(mycontroller.text.toString()).set({"title":mycontroller.text.toString(),"complete":false});
+               FirebaseFirestore.instance
+               .collection(currentUser.uid.toString())
+               .doc("All")
+               .collection("list")
+               .doc(topic)
+               .collection("all")
+               .doc(mycontroller.text.toString())
+               .set({"title":mycontroller.text.toString(),"complete":false});
               
               Navigator.pop(context);
             },

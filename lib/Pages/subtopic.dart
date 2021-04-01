@@ -18,322 +18,225 @@ class subtopic extends StatefulWidget {
 
 class _subtopicState extends State<subtopic> {
   @override
-
   int category = 0;
 
-  final listOfCategory2 = ["All","Complete", "Pending"];
+  final listOfCategory2 = ["All", "Complete", "Pending"];
 
   Widget build(BuildContext context) {
     User currentUser = FirebaseAuth.instance.currentUser;
+
+  /// Display
     Widget displayData(BuildContext context, DocumentSnapshot doc) {
-
-      if(category==0)
-      {
-          return Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          elevation: 15.0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned(
-                  left: displayWidth(context) * 0.02,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.lightBlue[100],
-                    radius: displayWidth(context) * 0.135,
-                    child: Image(
-                      image: AssetImage("images/b2.png"),
-                      width: displayWidth(context) * 0.18,
-                      height: displayHeight(context) * 0.1,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  child:  Checkbox(
-                    value: doc['complete'] ,
-                    activeColor: doc['complete']?Colors.green:Colors.red,
-                    onChanged: (value) {
-                      if (doc['complete']) {
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("All")
-                              .collection("list")
-                              .doc(widget.topic)
-                              .collection(widget.topic)
-                              .doc(doc['title'])
-                              .update({"complete": false});
-                        } else {
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("All")
-                              .collection("list")
-                              .doc(widget.topic)
-                              .collection(widget.topic)
-                              .doc(doc['title'])
-                              .update({"complete": true});
-                        }
-                    },
-
-                  ),
-
-                  
-                  
-                  
-                
-                  top: displayHeight(context) * 0.0115,
-                  right: displayWidth(context) * 0.02,
-                ),
-                Positioned(
-                  top: displayHeight(context) * 0.085,
-                  left: displayWidth(context) * 0.34,
-                  right: displayWidth(context) * 0.1,
-                  child: Text(
-                    doc['title'],
-                    style: TextStyle(
-                      fontSize: displayWidth(context) * 0.042,
-                      fontFamily: "PatuaOne",
-                    ),
-                  ),
-                ),
-
-                // Delete Syllabus
-
-                Positioned(
-                  bottom: displayHeight(context) * 0.00,
-                  right: displayWidth(context) * 0.02,
-                  child: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection(currentUser.uid.toString())
-                          .doc("All")
-                          .collection("list")
-                          .doc(widget.topic)
-                          .collection(widget.topic)
-                          .doc(doc['title'])
-                          .delete();
-                    },
-                  ),
-                ),
-              ],
-            ),
-            height: displayHeight(context) * 0.2,
-          ),
-        ),
-      );
-
-      } 
-
-      else if(category==1) // Complete
-      {
-        if(doc['complete'])
         return Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          elevation: 15.0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned(
-                  left: displayWidth(context) * 0.02,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.lightBlue[100],
-                    radius: displayWidth(context) * 0.135,
-                    child: Image(
-                      image: AssetImage("images/b2.png"),
-                      width: displayWidth(context) * 0.18,
-                      height: displayHeight(context) * 0.1,
-                      fit: BoxFit.fill,
+          padding: const EdgeInsets.only(bottom: 8.0, top: 0),
+          child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            elevation: 15.0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                    left: displayWidth(context) * 0.02,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.lightBlue[100],
+                      radius: displayWidth(context) * 0.125,
+                      child: Image(
+                        image: AssetImage("images/b2.png"),
+                        width: displayWidth(context) * 0.15,
+                        height: displayHeight(context) * 0.08,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  child:  Checkbox(
-                    value: doc['complete'] ,
-                    activeColor: doc['complete']?Colors.green:Colors.red,
-                    onChanged: (value) {
-                      if (doc['complete']) {
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("All")
-                              .collection("list")
-                              .doc(widget.topic)
-                              .collection(widget.topic)
-                              .doc(doc['title'])
-                              .update({"complete": false});
-                        } else {
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("All")
-                              .collection("list")
-                              .doc(widget.topic)
-                              .collection(widget.topic)
-                              .doc(doc['title'])
-                              .update({"complete": true});
-                        }
-                    },
-
-                  ),       
-                  top: displayHeight(context) * 0.0115,
-                  right: displayWidth(context) * 0.02,
-                ),
-                Positioned(
-                  top: displayHeight(context) * 0.085,
-                  left: displayWidth(context) * 0.34,
-                  right: displayWidth(context) * 0.1,
-                  child: Text(
-                    doc['title'],
-                    style: TextStyle(
-                      fontSize: displayWidth(context) * 0.042,
-                      fontFamily: "PatuaOne",
-                    ),
-                  ),
-                ),
-
-                // Delete Syllabus
-
-                Positioned(
-                  bottom: displayHeight(context) * 0.00,
-                  right: displayWidth(context) * 0.02,
-                  child: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      FirebaseFirestore.instance
+                  Positioned(
+                    child: Checkbox(
+                      value: doc['complete'],
+                      activeColor: doc['complete'] ? Colors.green : Colors.red,
+                      onChanged: (value) {
+                        setState(() {
+                          if (doc['complete']) {
+                            // complete -> pending 
+                            // delete complete 
+                            // upload pending 
+                            FirebaseFirestore.instance
                           .collection(currentUser.uid.toString())
                           .doc("All")
                           .collection("list")
                           .doc(widget.topic)
-                          .collection(widget.topic)
+                          .collection("all")
                           .doc(doc['title'])
-                          .delete();
-                    },
+                          .set({"title":doc['title'],"complete":false});
+                          
+                          } else {
+                            FirebaseFirestore.instance
+                                .collection(currentUser.uid.toString())
+                                .doc("All")
+                                .collection("list")
+                                .doc(widget.topic)
+                                .collection(widget.topic)
+                                .doc(doc['title'])
+                                .update({"complete": true});
+                          }
+                        });
+                      },
+                    ),
+                    top: displayHeight(context) * 0.0115,
+                    right: displayWidth(context) * 0.02,
                   ),
-                ),
-              ],
-            ),
-            height: displayHeight(context) * 0.2,
-          ),
-        ),
-      );
-      } 
-
-      else // Pending
-      {
-        if(!doc['complete'])
-        return Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          elevation: 15.0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned(
-                  left: displayWidth(context) * 0.02,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.lightBlue[100],
-                    radius: displayWidth(context) * 0.135,
-                    child: Image(
-                      image: AssetImage("images/b2.png"),
-                      width: displayWidth(context) * 0.18,
-                      height: displayHeight(context) * 0.1,
-                      fit: BoxFit.fill,
+                  Positioned(
+                    top: displayHeight(context) * 0.085,
+                    left: displayWidth(context) * 0.34,
+                    right: displayWidth(context) * 0.1,
+                    child: Text(
+                      doc['title'],
+                      style: TextStyle(
+                        fontSize: displayWidth(context) * 0.042,
+                        fontFamily: "PatuaOne",
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  child:  Checkbox(
-                    value: doc['complete'] ,
-                    activeColor: doc['complete']?Colors.green:Colors.red,
-                    onChanged: (value) {
-                      if (doc['complete']) {
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("All")
-                              .collection("list")
-                              .doc(widget.topic)
-                              .collection(widget.topic)
-                              .doc(doc['title'])
-                              .update({"complete": false});
-                        } else {
-                          FirebaseFirestore.instance
-                              .collection(currentUser.uid.toString())
-                              .doc("All")
-                              .collection("list")
-                              .doc(widget.topic)
-                              .collection(widget.topic)
-                              .doc(doc['title'])
-                              .update({"complete": true});
-                        }
-                    },
 
-                  ),
-                  top: displayHeight(context) * 0.0115,
-                  right: displayWidth(context) * 0.02,
-                ),
-                Positioned(
-                  top: displayHeight(context) * 0.085,
-                  left: displayWidth(context) * 0.34,
-                  right: displayWidth(context) * 0.1,
-                  child: Text(
-                    doc['title'],
-                    style: TextStyle(
-                      fontSize: displayWidth(context) * 0.042,
-                      fontFamily: "PatuaOne",
+                  // Delete Syllabus
+
+                  Positioned(
+                    bottom: displayHeight(context) * 0.00,
+                    right: displayWidth(context) * 0.02,
+                    child: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection(currentUser.uid.toString())
+                            .doc("All")
+                            .collection("list")
+                            .doc(widget.topic)
+                            .collection(widget.topic)
+                            .doc(doc['title'])
+                            .delete();
+                      },
                     ),
                   ),
-                ),
-
-                // Delete Syllabus
-
-                Positioned(
-                  bottom: displayHeight(context) * 0.00,
-                  right: displayWidth(context) * 0.02,
-                  child: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection(currentUser.uid.toString())
-                          .doc("All")
-                          .collection("list")
-                          .doc(widget.topic)
-                          .collection(widget.topic)
-                          .doc(doc['title'])
-                          .delete();
-                    },
-                  ),
-                ),
-              ],
+                ],
+              ),
+              height: displayHeight(context) * 0.18,
             ),
-            height: displayHeight(context) * 0.2,
           ),
-        ),
-      );
+        );
       }
-      
-    }
 
+    // Display All
+    Widget displayAllSubtopic() {
+  return StreamBuilder(
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData)
+          return Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wifi_off_outlined,
+                    size: displayWidth(context) * 0.15,
+                  ),
+                  Opacity(
+                    opacity: 0.0,
+                    child: Divider(
+                      height: displayHeight(context) * 0.005,
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      "Please check your internet connection ...",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        //fontWeight: FontWeight.bold,
+                        fontSize: displayWidth(context) * 0.055,
+                        fontFamily: "PatuaOne",
+                      ),
+                    ),
+                  ),
+                ]),
+          );
+        return Padding(
+          padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
+          child: ListView.builder(
+            padding: EdgeInsets.only(top: 0.0),
+            itemBuilder: (BuildContext context, int index) {
+              return displayData(context, snapshot.data.docs[index]);
+            },
+            itemCount: snapshot.data.docs.length,
+          ),
+        );
+      },
+      stream: FirebaseFirestore.instance
+          .collection(currentUser.uid.toString())
+          .doc("All")
+          .collection("list")
+          .doc(widget.topic)
+          .collection(widget.topic)
+          .snapshots());
+}
+// Display Complete
+// 
+//  
+Widget displayCompleteSubtopic() {
+  return StreamBuilder(
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData)
+          return Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wifi_off_outlined,
+                    size: displayWidth(context) * 0.15,
+                  ),
+                  Opacity(
+                    opacity: 0.0,
+                    child: Divider(
+                      height: displayHeight(context) * 0.005,
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      "Please check your internet connection ...",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        //fontWeight: FontWeight.bold,
+                        fontSize: displayWidth(context) * 0.055,
+                        fontFamily: "PatuaOne",
+                      ),
+                    ),
+                  ),
+                ]),
+          );
+        return Padding(
+          padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
+          child: ListView.builder(
+            padding: EdgeInsets.only(top: 0.0),
+            itemBuilder: (BuildContext context, int index) {
+              return displayData(context, snapshot.data.docs[index]);
+            },
+            itemCount: snapshot.data.docs.length,
+          ),
+        );
+      },
+      stream: FirebaseFirestore.instance
+          .collection(currentUser.uid.toString())
+          .doc("All")
+          .collection("list")
+          .doc(widget.topic)
+          .collection(widget.topic)
+          .snapshots());
+}
+
+    
     String myTitle = widget.topic;
     String imageLoc = "";
     if (myTitle.toLowerCase().contains("chemistry"))
@@ -410,11 +313,11 @@ class _subtopicState extends State<subtopic> {
                     right: displayWidth(context) * 0.04,
                     child: Hero(
                       tag: myTitle,
-                                          child: Card(
+                      child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         ),
-                    //elevation: 40.0,
+                        //elevation: 40.0,
                         borderOnForeground: true,
                         shadowColor: Colors.red,
                         child: ClipRRect(
@@ -448,26 +351,24 @@ class _subtopicState extends State<subtopic> {
                   // favourite Subject !!
 
                   Positioned(
-                    top: displayHeight(context)*0.17,
-                    left: displayWidth(context)*0.04,                      
-                    child: CircleAvatar(
-                      radius: displayWidth(context)*0.085,
-                      backgroundColor: Colors.black,
+                      top: displayHeight(context) * 0.17,
+                      left: displayWidth(context) * 0.0535,
                       child: CircleAvatar(
-                        radius: displayWidth(context)*0.075,
-                        backgroundColor: Colors.white,
-                                              child: IconButton(
-                        onPressed: () {
-                  
-                        },
-                        icon: Icon(widget.isfav
-                            ? Icons.favorite
-                            : Icons.favorite_border_outlined),
-                        color: Colors.red,
-                        iconSize: displayWidth(context)*0.1,
-                  ),
-                      ),
-                    )),
+                        radius: displayWidth(context) * 0.0735,
+                        backgroundColor: Colors.black,
+                        child: CircleAvatar(
+                          radius: displayWidth(context) * 0.066,
+                          backgroundColor: Colors.white,
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(widget.isfav
+                                ? Icons.favorite
+                                : Icons.favorite_border_outlined),
+                            color: Colors.red,
+                            iconSize: displayWidth(context) * 0.068,
+                          ),
+                        ),
+                      )),
                 ],
               ),
               decoration: BoxDecoration(
@@ -483,65 +384,64 @@ class _subtopicState extends State<subtopic> {
             ),
           ),
           Positioned(
-                        top: displayHeight(context) * 0.32,
-                        left: displayWidth(context) * 0.04,
-                        right: displayWidth(context) * 0.04,
-                        child: Container(
-                          child: ListView.builder(
-                            itemBuilder: (BuildContext context, int current) {
-                              return GestureDetector(
-                                onTap: () {
-                                  print("tap");
-                                  setState(() {
-                                    category = current;
-                                  });
-                                  print(category);
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 18.0,
-                                      bottom: 10.0,
-                                      left: 42.0,
-                                      right: 20.0),
-                                  child: Text(
-                                    listOfCategory2[current],
-                                    style: TextStyle(
-                                      color: (current == category)
-                                          ? Colors.white
-                                          : Colors.white60,
-                                      fontSize: displayWidth(context) * 0.045,
-                                      fontWeight: (current == category)
-                                          ? FontWeight.bold
-                                          : FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            itemCount: listOfCategory2.length,
-                            scrollDirection: Axis.horizontal,
+              top: displayHeight(context) * 0.32,
+              left: displayWidth(context) * 0.04,
+              right: displayWidth(context) * 0.04,
+              child: Container(
+                child: ListView.builder(
+                  itemBuilder: (BuildContext context, int current) {
+                    return GestureDetector(
+                      onTap: () {
+                        print("tap");
+                        setState(() {
+                          category = current;
+                        });
+                        print(category);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: 18.0, bottom: 10.0, left: 42.0, right: 20.0),
+                        child: Text(
+                          listOfCategory2[current],
+                          style: TextStyle(
+                            color: (current == category)
+                                ? Colors.white
+                                : Colors.white60,
+                            fontSize: displayWidth(context) * 0.045,
+                            fontWeight: (current == category)
+                                ? FontWeight.bold
+                                : FontWeight.w500,
                           ),
-                          height: displayHeight(context) * 0.075,
-                          width: displayWidth(context) * 0.64,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(image: AssetImage("images/a4.jpg",),fit:BoxFit.cover),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(30),
-                              bottomRight: Radius.circular(30),
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            ),
-                          ),
-                        ))
-                 ,
-
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: listOfCategory2.length,
+                  scrollDirection: Axis.horizontal,
+                ),
+                height: displayHeight(context) * 0.075,
+                width: displayWidth(context) * 0.64,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                        "images/a4.jpg",
+                      ),
+                      fit: BoxFit.cover),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+              )),
           Positioned(
-            top: displayHeight(context) * 0.4,
+            top: displayHeight(context) * 0.42,
             child: Container(
               alignment: Alignment.center,
-              height: displayHeight(context) * 0.74,
+              height: displayHeight(context) * 0.58,
               width: displayWidth(context) * 0.85,
-              //rcolor: Colors.purple,
+              //color: Colors.purple,
               child: StreamBuilder(
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData)
@@ -573,11 +473,16 @@ class _subtopicState extends State<subtopic> {
                               ),
                             ]),
                       );
-                    return ListView.builder(
-                      itemBuilder: (BuildContext context, int index) {
-                        return displayData(context, snapshot.data.docs[index]);
-                      },
-                      itemCount: snapshot.data.docs.length,
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
+                      child: ListView.builder(
+                        padding: EdgeInsets.only(top: 0.0),
+                        itemBuilder: (BuildContext context, int index) {
+                          return displayData(
+                              context, snapshot.data.docs[index]);
+                        },
+                        itemCount: snapshot.data.docs.length,
+                      ),
                     );
                   },
                   stream: FirebaseFirestore.instance
@@ -602,3 +507,4 @@ class _subtopicState extends State<subtopic> {
     );
   }
 }
+
