@@ -140,7 +140,16 @@ void AddNdewSubtopic(BuildContext context,String topic) async {
                .doc("All")
                .collection("list")
                .doc(topic)
-               .collection("all")
+               .collection("All")
+               .doc(mycontroller.text.toString())
+               .set({"title":mycontroller.text.toString(),"complete":false});
+
+                FirebaseFirestore.instance
+               .collection(currentUser.uid.toString())
+               .doc("All")
+               .collection("list")
+               .doc(topic)
+               .collection("Pending")
                .doc(mycontroller.text.toString())
                .set({"title":mycontroller.text.toString(),"complete":false});
               

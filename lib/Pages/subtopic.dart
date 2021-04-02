@@ -25,218 +25,453 @@ class _subtopicState extends State<subtopic> {
   Widget build(BuildContext context) {
     User currentUser = FirebaseAuth.instance.currentUser;
 
-  /// Display
-    Widget displayData(BuildContext context, DocumentSnapshot doc) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0, top: 0),
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            elevation: 15.0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned(
-                    left: displayWidth(context) * 0.02,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.lightBlue[100],
-                      radius: displayWidth(context) * 0.125,
-                      child: Image(
-                        image: AssetImage("images/b2.png"),
-                        width: displayWidth(context) * 0.15,
-                        height: displayHeight(context) * 0.08,
-                        fit: BoxFit.fill,
-                      ),
+    // Complete and pending data display
+
+    Widget displayDataCompleteandPending(
+        BuildContext context, DocumentSnapshot doc) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0, top: 0),
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          elevation: 15.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  left: displayWidth(context) * 0.02,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.lightBlue[100],
+                    radius: displayWidth(context) * 0.125,
+                    child: Image(
+                      image: AssetImage("images/b2.png"),
+                      width: displayWidth(context) * 0.15,
+                      height: displayHeight(context) * 0.08,
+                      fit: BoxFit.fill,
                     ),
                   ),
-                  Positioned(
-                    child: Checkbox(
-                      value: doc['complete'],
-                      activeColor: doc['complete'] ? Colors.green : Colors.red,
-                      onChanged: (value) {
-                        setState(() {
-                          if (doc['complete']) {
-                            // complete -> pending 
-                            // delete complete 
-                            // upload pending 
-                            FirebaseFirestore.instance
+                ),
+                Positioned(
+                  child: Checkbox(
+                    value: doc['complete'],
+                    activeColor: doc['complete'] ? Colors.green : Colors.red,
+                    onChanged: (value) {
+                      setState(() {
+                        if (doc['complete']) {
+                          // complete -> pending
+                          // delete complete
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("All")
+                              .doc(doc['title'])
+                              .update({'title': doc['title'], 'complete': false});
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("Pending")
+                              .doc(doc['title'])
+                              .set({'title': doc['title'], 'complete': false});
+
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("Complete")
+                              .doc(doc['title'])
+                              .delete();
+                        } else {
+                          //
+                          // pending -> complete
+                          // delete pending
+                          // create complete
+
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("Pending")
+                              .doc(doc['title'])
+                              .delete();
+
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("Complete")
+                              .doc(doc['title'])
+                              .set({'title': doc['title'], 'complete': true});
+                           FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("All")
+                              .doc(doc['title'])
+                              .update({'title': doc['title'], 'complete': true});
+
+                        }
+                      });
+                    },
+                  ),
+                  top: displayHeight(context) * 0.0115,
+                  right: displayWidth(context) * 0.02,
+                ),
+                Positioned(
+                  top: displayHeight(context) * 0.085,
+                  left: displayWidth(context) * 0.34,
+                  right: displayWidth(context) * 0.1,
+                  child: Text(
+                    doc['title'],
+                    style: TextStyle(
+                      fontSize: displayWidth(context) * 0.042,
+                      fontFamily: "PatuaOne",
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            height: displayHeight(context) * 0.18,
+          ),
+        ),
+      );
+    }
+
+    /// Display
+    Widget displayData(BuildContext context, DocumentSnapshot doc) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0, top: 0),
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          elevation: 15.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  left: displayWidth(context) * 0.02,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.lightBlue[100],
+                    radius: displayWidth(context) * 0.125,
+                    child: Image(
+                      image: AssetImage("images/b2.png"),
+                      width: displayWidth(context) * 0.15,
+                      height: displayHeight(context) * 0.08,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  child: Checkbox(
+                    value: doc['complete'],
+                    activeColor: doc['complete'] ? Colors.green : Colors.red,
+                    onChanged: (value) {
+                      setState(() {
+                        if (doc['complete']) {
+                          // complete -> pending
+                          // delete complete
+
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("All")
+                              .doc(doc['title'])
+                              .update(
+                                  {"title": doc['title'], "complete": false});
+
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("Pending")
+                              .doc(doc['title'])
+                              .set({'title': doc['title'], 'complete': false});
+
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("Complete")
+                              .doc(doc['title'])
+                              .delete();
+                        } else {
+                          //
+                          // pending -> complete
+                          // delete pending
+                          // create complete
+
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("Pending")
+                              .doc(doc['title'])
+                              .delete();
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("All")
+                              .doc(doc['title'])
+                              .update(
+                                  {"title": doc['title'], "complete": true});
+                          FirebaseFirestore.instance
+                              .collection(currentUser.uid.toString())
+                              .doc("All")
+                              .collection("list")
+                              .doc(widget.topic)
+                              .collection("Complete")
+                              .doc(doc['title'])
+                              .set({'title': doc['title'], 'complete': true});
+                        }
+                      });
+                    },
+                  ),
+                  top: displayHeight(context) * 0.0115,
+                  right: displayWidth(context) * 0.02,
+                ),
+                Positioned(
+                  top: displayHeight(context) * 0.085,
+                  left: displayWidth(context) * 0.34,
+                  right: displayWidth(context) * 0.1,
+                  child: Text(
+                    doc['title'],
+                    style: TextStyle(
+                      fontSize: displayWidth(context) * 0.042,
+                      fontFamily: "PatuaOne",
+                    ),
+                  ),
+                ),
+
+                // Delete Syllabus
+
+                Positioned(
+                  bottom: displayHeight(context) * 0.00,
+                  right: displayWidth(context) * 0.02,
+                  child: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      FirebaseFirestore.instance
                           .collection(currentUser.uid.toString())
                           .doc("All")
                           .collection("list")
                           .doc(widget.topic)
-                          .collection("all")
+                          .collection("All")
                           .doc(doc['title'])
-                          .set({"title":doc['title'],"complete":false});
-                          
-                          } else {
-                            FirebaseFirestore.instance
-                                .collection(currentUser.uid.toString())
-                                .doc("All")
-                                .collection("list")
-                                .doc(widget.topic)
-                                .collection(widget.topic)
-                                .doc(doc['title'])
-                                .update({"complete": true});
-                          }
-                        });
-                      },
-                    ),
-                    top: displayHeight(context) * 0.0115,
-                    right: displayWidth(context) * 0.02,
-                  ),
-                  Positioned(
-                    top: displayHeight(context) * 0.085,
-                    left: displayWidth(context) * 0.34,
-                    right: displayWidth(context) * 0.1,
-                    child: Text(
-                      doc['title'],
-                      style: TextStyle(
-                        fontSize: displayWidth(context) * 0.042,
-                        fontFamily: "PatuaOne",
-                      ),
-                    ),
-                  ),
+                          .delete();
 
-                  // Delete Syllabus
+                          FirebaseFirestore.instance
+                          .collection(currentUser.uid.toString())
+                          .doc("All")
+                          .collection("list")
+                          .doc(widget.topic)
+                          .collection("Complete")
+                          .doc(doc['title'])
+                          .delete();
 
-                  Positioned(
-                    bottom: displayHeight(context) * 0.00,
-                    right: displayWidth(context) * 0.02,
-                    child: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        FirebaseFirestore.instance
-                            .collection(currentUser.uid.toString())
-                            .doc("All")
-                            .collection("list")
-                            .doc(widget.topic)
-                            .collection(widget.topic)
-                            .doc(doc['title'])
-                            .delete();
-                      },
-                    ),
+                          FirebaseFirestore.instance
+                          .collection(currentUser.uid.toString())
+                          .doc("All")
+                          .collection("list")
+                          .doc(widget.topic)
+                          .collection("Pending")
+                          .doc(doc['title'])
+                          .delete();
+                    },
                   ),
-                ],
-              ),
-              height: displayHeight(context) * 0.18,
+                ),
+              ],
             ),
+            height: displayHeight(context) * 0.18,
           ),
-        );
-      }
+        ),
+      );
+    }
 
     // Display All
     Widget displayAllSubtopic() {
-  return StreamBuilder(
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.wifi_off_outlined,
-                    size: displayWidth(context) * 0.15,
-                  ),
-                  Opacity(
-                    opacity: 0.0,
-                    child: Divider(
-                      height: displayHeight(context) * 0.005,
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "Please check your internet connection ...",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        //fontWeight: FontWeight.bold,
-                        fontSize: displayWidth(context) * 0.055,
-                        fontFamily: "PatuaOne",
+      return StreamBuilder(
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData)
+              return Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.wifi_off_outlined,
+                        size: displayWidth(context) * 0.15,
                       ),
-                    ),
-                  ),
-                ]),
-          );
-        return Padding(
-          padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
-          child: ListView.builder(
-            padding: EdgeInsets.only(top: 0.0),
-            itemBuilder: (BuildContext context, int index) {
-              return displayData(context, snapshot.data.docs[index]);
-            },
-            itemCount: snapshot.data.docs.length,
-          ),
-        );
-      },
-      stream: FirebaseFirestore.instance
-          .collection(currentUser.uid.toString())
-          .doc("All")
-          .collection("list")
-          .doc(widget.topic)
-          .collection(widget.topic)
-          .snapshots());
-}
-// Display Complete
-// 
-//  
-Widget displayCompleteSubtopic() {
-  return StreamBuilder(
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.wifi_off_outlined,
-                    size: displayWidth(context) * 0.15,
-                  ),
-                  Opacity(
-                    opacity: 0.0,
-                    child: Divider(
-                      height: displayHeight(context) * 0.005,
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "Please check your internet connection ...",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        //fontWeight: FontWeight.bold,
-                        fontSize: displayWidth(context) * 0.055,
-                        fontFamily: "PatuaOne",
+                      Opacity(
+                        opacity: 0.0,
+                        child: Divider(
+                          height: displayHeight(context) * 0.005,
+                        ),
                       ),
-                    ),
-                  ),
-                ]),
-          );
-        return Padding(
-          padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
-          child: ListView.builder(
-            padding: EdgeInsets.only(top: 0.0),
-            itemBuilder: (BuildContext context, int index) {
-              return displayData(context, snapshot.data.docs[index]);
-            },
-            itemCount: snapshot.data.docs.length,
-          ),
-        );
-      },
-      stream: FirebaseFirestore.instance
-          .collection(currentUser.uid.toString())
-          .doc("All")
-          .collection("list")
-          .doc(widget.topic)
-          .collection(widget.topic)
-          .snapshots());
-}
+                      Center(
+                        child: Text(
+                          "Please check your internet connection ...",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            //fontWeight: FontWeight.bold,
+                            fontSize: displayWidth(context) * 0.055,
+                            fontFamily: "PatuaOne",
+                          ),
+                        ),
+                      ),
+                    ]),
+              );
+            return Padding(
+              padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
+              child: ListView.builder(
+                padding: EdgeInsets.only(top: 0.0),
+                itemBuilder: (BuildContext context, int index) {
+                  return displayData(context, snapshot.data.docs[index]);
+                },
+                itemCount: snapshot.data.docs.length,
+              ),
+            );
+          },
+          stream: FirebaseFirestore.instance
+              .collection(currentUser.uid.toString())
+              .doc("All")
+              .collection("list")
+              .doc(widget.topic)
+              .collection("All")
+              .snapshots());
+    }
 
-    
+// Display Complete
+//
+    Widget displayCompleteSubtopic() {
+      return StreamBuilder(
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData)
+              return Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.wifi_off_outlined,
+                        size: displayWidth(context) * 0.15,
+                      ),
+                      Opacity(
+                        opacity: 0.0,
+                        child: Divider(
+                          height: displayHeight(context) * 0.005,
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "Please check your internet connection ...",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            //fontWeight: FontWeight.bold,
+                            fontSize: displayWidth(context) * 0.055,
+                            fontFamily: "PatuaOne",
+                          ),
+                        ),
+                      ),
+                    ]),
+              );
+            return Padding(
+              padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
+              child: ListView.builder(
+                padding: EdgeInsets.only(top: 0.0),
+                itemBuilder: (BuildContext context, int index) {
+                  return displayDataCompleteandPending(
+                      context, snapshot.data.docs[index]);
+                },
+                itemCount: snapshot.data.docs.length,
+              ),
+            );
+          },
+          stream: FirebaseFirestore.instance
+              .collection(currentUser.uid.toString())
+              .doc("All")
+              .collection("list")
+              .doc(widget.topic)
+              .collection("Complete")
+              .snapshots());
+    }
+
+    Widget displayPendingSubtopic() {
+      return StreamBuilder(
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData)
+              return Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.wifi_off_outlined,
+                        size: displayWidth(context) * 0.15,
+                      ),
+                      Opacity(
+                        opacity: 0.0,
+                        child: Divider(
+                          height: displayHeight(context) * 0.005,
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "Please check your internet connection ...",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            //fontWeight: FontWeight.bold,
+                            fontSize: displayWidth(context) * 0.055,
+                            fontFamily: "PatuaOne",
+                          ),
+                        ),
+                      ),
+                    ]),
+              );
+            return Padding(
+              padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
+              child: ListView.builder(
+                padding: EdgeInsets.only(top: 0.0),
+                itemBuilder: (BuildContext context, int index) {
+                  return displayDataCompleteandPending(
+                      context, snapshot.data.docs[index]);
+                },
+                itemCount: snapshot.data.docs.length,
+              ),
+            );
+          },
+          stream: FirebaseFirestore.instance
+              .collection(currentUser.uid.toString())
+              .doc("All")
+              .collection("list")
+              .doc(widget.topic)
+              .collection("Pending")
+              .snapshots());
+    }
+
     String myTitle = widget.topic;
     String imageLoc = "";
     if (myTitle.toLowerCase().contains("chemistry"))
@@ -442,56 +677,12 @@ Widget displayCompleteSubtopic() {
               height: displayHeight(context) * 0.58,
               width: displayWidth(context) * 0.85,
               //color: Colors.purple,
-              child: StreamBuilder(
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData)
-                      return Center(
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.wifi_off_outlined,
-                                size: displayWidth(context) * 0.15,
-                              ),
-                              Opacity(
-                                opacity: 0.0,
-                                child: Divider(
-                                  height: displayHeight(context) * 0.005,
-                                ),
-                              ),
-                              Center(
-                                child: Text(
-                                  "Please check your internet connection ...",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    //fontWeight: FontWeight.bold,
-                                    fontSize: displayWidth(context) * 0.055,
-                                    fontFamily: "PatuaOne",
-                                  ),
-                                ),
-                              ),
-                            ]),
-                      );
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 0.0, bottom: 16.0),
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(top: 0.0),
-                        itemBuilder: (BuildContext context, int index) {
-                          return displayData(
-                              context, snapshot.data.docs[index]);
-                        },
-                        itemCount: snapshot.data.docs.length,
-                      ),
-                    );
-                  },
-                  stream: FirebaseFirestore.instance
-                      .collection(currentUser.uid.toString())
-                      .doc("All")
-                      .collection("list")
-                      .doc(widget.topic)
-                      .collection(widget.topic)
-                      .snapshots()),
+
+              child: (category == 0)
+                  ? displayAllSubtopic()
+                  : (category == 1)
+                      ? displayCompleteSubtopic()
+                      : displayPendingSubtopic(),
             ),
           )
         ],
@@ -507,4 +698,3 @@ Widget displayCompleteSubtopic() {
     );
   }
 }
-
