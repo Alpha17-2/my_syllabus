@@ -16,6 +16,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    
     return MultiProvider(
         providers: [         
           ChangeNotifierProvider(
@@ -27,7 +28,9 @@ class MyApp extends StatelessWidget {
               create: (context) =>
                   context.read<authservice>().authStateChanges),
         ],
-        child: MaterialApp(home: Consumer<AuthNotifier>(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Consumer<AuthNotifier>(
           builder: (context, notifier, child) {
             return notifier.user != null ? mySyllabus() : Login();
           },

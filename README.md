@@ -1,3 +1,15 @@
-An android app that helps you keep track of your syllabus .
-![IMG_20210328_224604_829](https://user-images.githubusercontent.com/57010722/112761224-f12f7980-9017-11eb-9943-31168289e0d0.jpg)
-![IMG_20210328_224636_488](https://user-images.githubusercontent.com/57010722/112761226-f4c30080-9017-11eb-8390-3deb3e959a66.jpg)
+## Syllabus App
+| Login | Homepage | Subtopic Page | Sign Up
+|-----------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------
+
+|<img src="screenshots/1.png" height="400em" /> | <img src="screenshots/2.png" height="400em" /> | <img src="screenshots/3.png" height="400em" /> | <img src="screenshots/4.png" height="400em"/>
+
+
+
+# Show some :heart: and star the repo to support the project.
+
+## Contribute
+1. Fork the the project
+2. Make required changes and commit (git commit -am 'Add some feature')
+3. Push to the branch (git push origin my-new-feature)
+4. Create new Pull Request
