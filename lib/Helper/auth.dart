@@ -24,7 +24,7 @@ class authservice {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       final User user = auth.currentUser;
       final uid = user.uid;
-      return "Signed In";
+      return "valid";
     } on FirebaseAuthException catch (e) {
       return "Error";
     }

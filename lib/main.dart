@@ -1,5 +1,5 @@
 import 'package:Syllabus/Helper/auth.dart';
-import 'package:Syllabus/Pages/login.dart';
+import 'package:Syllabus/Pages/authscreen.dart';
 import 'package:Syllabus/Pages/mySyllabus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: Consumer<AuthNotifier>(
           builder: (context, notifier, child) {
-            return notifier.user != null ? mySyllabus() : Login();
+            return notifier.user != null ? mySyllabus() : wrapper();
           },
         )));
   }
@@ -47,6 +47,6 @@ class wrapper extends StatelessWidget {
     if (firebaseUser != null) {
       return mySyllabus();
     } else
-      return Login();
+      return authscreen();
   }
 }

@@ -324,36 +324,16 @@ class _mySyllabusState extends State<mySyllabus> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Profile Picture
-                    Positioned(
-                      top: displayHeight(context) * 0.07,
-                      left: displayWidth(context) * 0.08,
-                      child: Card(
-                          color: Colors.blue[100],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: Icon(Icons.person,
-                              size: displayWidth(context) * 0.12)),
-                    ),
-
-                    // Profile Name
-
-                    Positioned(
-                      top: displayHeight(context) * 0.088,
-                      left: displayWidth(context) * 0.25,
-                      child: Text(
-                        currentUser.displayName,
-                        style: TextStyle(
-                            fontFamily: "PatuaOne",
-                            letterSpacing: 1.3,
-                            color: Colors.white,
-                            fontSize: displayWidth(context) * 0.05),
-                      ),
-                    ),
-
                     // Logout Icon
-
+                    // 
+                    Positioned(
+                      top: displayHeight(context)*0.08,
+                      child: Text("My Syllabus",style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "PatuaOne",
+                        fontSize: displayWidth(context)*0.05,
+                      ),
+                    )),
                     Positioned(
                       child: IconButton(
                         icon: Icon(
